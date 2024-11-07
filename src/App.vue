@@ -1,12 +1,18 @@
 <template>
   <div id="app">
+    <AppHeader /> <!-- 헤더 추가 -->
     <router-view /> <!-- 라우터를 통해 페이지가 표시되는 부분 -->
   </div>
 </template>
 
 <script>
+import AppHeader from "@/components/AppHeader.vue";
+
 export default {
-  name: 'App'
+  name: "App",
+  components: {
+    AppHeader
+  }
 };
 </script>
 
