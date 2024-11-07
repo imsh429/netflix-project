@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/views/HomePage.vue';
 import PopularMovies from '@/views/PopularMovies.vue';
 import SearchMovies from '@/views/SearchMovies.vue'; // SearchMovies 컴포넌트 추가
+import WishlistMovies from '@/views/WishlistMovies.vue';
 
 const routes = [
     {
@@ -18,6 +19,11 @@ const routes = [
         path: '/search', // /search 경로 추가
         name: 'SearchMovies',
         component: SearchMovies
+    },
+    {
+        path: '/wishlist', // /wishlist 경로 추가
+        name: 'WishlistMovies',
+        component: WishlistMovies
     }
 ];
 
