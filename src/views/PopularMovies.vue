@@ -1,36 +1,89 @@
 <template>
   <div class="popular-movies">
     <h1>인기 영화</h1>
-    <div v-if="loading" class="loading">로딩 중...</div>
-    <div v-else class="movies-grid">
-      <div v-for="movie in movies" :key="movie.id" class="movie-item">
-        <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
-        <p>{{ movie.title }}</p>
-      </div>
+
+    <!-- View 전환 버튼 -->
+    <div class="view-toggle">
+      <button @click="changeView('table')" :class="{ active: viewMode === 'table' }">Table View</button>
+      <button @click="changeView('infinite')" :class="{ active: viewMode === 'infinite' }">Infinite Scroll</button>
     </div>
+
+    <!-- Table View 컴포넌트 -->
+    <TableView
+        v-if="viewMode === 'table'"
+        :movies="movies"
+        :currentPage="currentPage"
+        :hasMorePages="hasMorePages"
+        @fetchPage="fetchMovies"
+    />
+
+    <!-- Infinite Scroll View 컴포넌트 -->
+    <InfiniteScrollView
+        v-if="viewMode === 'infinite'"
+        :movies="movies"
+        :loading="loading"
+        @loadMore="loadMoreMovies"
+    />
   </div>
 </template>
 
 <script>
+import TableView from "@/components/TableView.vue";
+import InfiniteScrollView from "@/components/InfiniteScrollView.vue";
 import { fetchMovies, endpoints } from "@/services/tmdbService.js";
 
 export default {
   name: "PopularMovies",
+  components: {
+    TableView,
+    InfiniteScrollView
+  },
   data() {
     return {
       movies: [],
-      loading: true
+      loading: true,
+      viewMode: "table",
+      currentPage: 1,
+      hasMorePages: true
     };
   },
-  async created() {
-    try {
-      const data = await fetchMovies(endpoints.popular);
-      this.movies = data.results;
-    } catch (error) {
-      console.error("영화 데이터를 불러오는 중 오류:", error);
-    } finally {
-      this.loading = false;
+  methods: {
+    async fetchMovies(page = 1) {
+      this.loading = true;
+      try {
+        const data = await fetchMovies(endpoints.popular, page);
+        this.movies = data.results;
+        this.currentPage = page;
+        this.hasMorePages = data.page < data.total_pages;
+      } catch (error) {
+        console.error("영화 데이터를 불러오는 중 오류:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async loadMoreMovies() {
+      if (this.loading || !this.hasMorePages) return;
+      this.loading = true;
+      try {
+        const nextPage = this.currentPage + 1;
+        const data = await fetchMovies(endpoints.popular, nextPage);
+        this.movies = [...this.movies, ...data.results];
+        this.currentPage = nextPage;
+        this.hasMorePages = data.page < data.total_pages;
+      } catch (error) {
+        console.error("추가 영화 데이터를 불러오는 중 오류:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    changeView(view) {
+      this.viewMode = view;
+      this.movies = [];
+      this.fetchMovies(1);
     }
+  },
+  async created() {
+    await this.fetchMovies(this.currentPage);
   }
 };
 </script>
@@ -39,28 +92,15 @@ export default {
 .popular-movies {
   padding: 2rem;
 }
-.loading {
-  text-align: center;
-  font-size: 1.5rem;
-  margin-top: 2rem;
+.view-toggle {
+  margin-bottom: 1rem;
 }
-.movies-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
+.view-toggle button {
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
 }
-.movie-item img {
-  width: 100%;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-.movie-item img:hover {
-  transform: scale(1.05);
-}
-.movie-item p {
-  text-align: center;
-  font-size: 1rem;
-  margin-top: 0.5rem;
-  color: #333;
+.view-toggle button.active {
+  font-weight: bold;
 }
 </style>
