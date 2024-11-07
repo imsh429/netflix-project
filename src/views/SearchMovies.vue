@@ -65,7 +65,8 @@ export default {
     },
     loadMoreMovies() {
       if (this.loading || !this.hasMorePages) return;
-      this.$refs.searchResults.loadMore();
+      const nextPage = this.currentPage + 1;
+      this.fetchMovies(nextPage); // 다음 페이지 데이터를 가져옴
     },
     applyFilters(filters) {
       this.filters = filters;
