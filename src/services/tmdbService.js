@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiKey = 'YOUR_API_KEY'; // 발급받은 API 키를 여기에 입력하세요.
+const apiKey = 'ae551acb587870f6d116fb74e4e9fe28'; // 발급받은 API 키를 여기에 입력하세요.
 const language = 'ko-KR';
 
 const endpoints = {

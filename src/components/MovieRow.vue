@@ -20,7 +20,8 @@
 <script>
 export default {
   props: {
-    movies: Array
+    movies: Array,
+    default: () => [] // 기본값을 빈 배열로 설정
   },
   data() {
     return {

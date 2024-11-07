@@ -1,19 +1,16 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Home from '@/views/Home.vue';
-
-Vue.use(VueRouter);
+import { createRouter, createWebHistory } from 'vue-router';
+import HomePage from '@/views/HomePage.vue';
 
 const routes = [
     {
         path: '/',
         name: 'Home',
-        component: Home
+        component: HomePage
     }
 ];
 
-const router = new VueRouter({
-    mode: 'history',
+const router = createRouter({
+    history: createWebHistory('/netflix-project/'),
     routes
 });
 

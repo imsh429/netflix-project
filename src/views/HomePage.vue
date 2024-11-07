@@ -21,6 +21,7 @@ import MovieRow from "@/components/MovieRow.vue";
 import { fetchMovies, endpoints } from "@/services/tmdbService.js";
 
 export default {
+  name: "HomePage", // 다단어 이름으로 변경
   components: {
     MovieRow
   },
@@ -34,6 +35,7 @@ export default {
   async created() {
     try {
       const popularData = await fetchMovies(endpoints.popular);
+      console.log("인기 영화 데이터:", popularData); // 여기서 데이터를 확인합니다
       const nowPlayingData = await fetchMovies(endpoints.nowPlaying);
       const genreData = await fetchMovies(endpoints.genre);
 
