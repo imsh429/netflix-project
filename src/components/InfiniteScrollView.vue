@@ -1,7 +1,13 @@
 <template>
   <div class="infinite-view" @scroll="handleScroll">
     <div class="movies-grid">
-      <div v-for="movie in movies" :key="movie.id" class="movie-item">
+      <div
+          v-for="movie in movies"
+          :key="movie.id"
+          class="movie-item"
+          :class="{ 'wishlist-added': isMovieInWishlist(movie.id) }"
+          @click="toggleWishlist(movie)"
+      >
         <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
         <p>{{ movie.title }}</p>
       </div>
@@ -20,11 +26,12 @@ export default {
   name: "InfiniteScrollView",
   props: {
     movies: Array,
-    loading: Boolean
+    loading: Boolean,
+    isMovieInWishlist: Function, // 추천 영화인지 확인하는 함수
   },
   data() {
     return {
-      showTopButton: false
+      showTopButton: false,
     };
   },
   methods: {
@@ -37,8 +44,11 @@ export default {
     },
     scrollToTop() {
       this.$el.scrollTop = 0;
-    }
-  }
+    },
+    toggleWishlist(movie) {
+      this.$emit("toggleWishlist", movie); // 부모 컴포넌트로 영화 정보 전달
+    },
+  },
 };
 </script>
 
@@ -52,13 +62,19 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
 }
+.movie-item {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
 .movie-item img {
   width: 100%;
   border-radius: 8px;
-  transition: transform 0.3s ease;
 }
-.movie-item img:hover {
+.movie-item:hover img {
   transform: scale(1.05);
+}
+.movie-item.wishlist-added {
+  border: 2px solid #ff0000; /* 추천 영화 스타일 차별화 */
 }
 .loading {
   text-align: center;

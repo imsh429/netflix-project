@@ -12,21 +12,16 @@
     <TableView
         v-if="viewMode === 'table'"
         :movies="movies"
-        :currentPage="currentPage"
-        :hasMorePages="hasMorePages"
-        @fetchPage="fetchMovies"
-        @toggleWishlist="toggleWishlist"
         :isMovieInWishlist="isMovieInWishlist"
+        @toggleWishlist="toggleWishlist"
     />
 
     <!-- Infinite Scroll View 컴포넌트 -->
     <InfiniteScrollView
         v-if="viewMode === 'infinite'"
         :movies="movies"
-        :loading="loading"
-        @loadMore="loadMoreMovies"
-        @toggleWishlist="toggleWishlist"
         :isMovieInWishlist="isMovieInWishlist"
+        @toggleWishlist="toggleWishlist"
     />
   </div>
 </template>
