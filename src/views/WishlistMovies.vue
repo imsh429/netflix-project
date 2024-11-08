@@ -19,7 +19,7 @@
         </thead>
         <tbody>
         <tr v-for="movie in wishlistMovies" :key="movie.id">
-          <td><img :src="`https://image.tmdb.org/t/p/w200${movie.poster_path}`" :alt="movie.title" /></td>
+          <td><MovieItem :movie="movie" :isWishlistPage="true" /></td> <!-- MovieItem 사용 -->
           <td>{{ movie.title }}</td>
         </tr>
         </tbody>
@@ -29,21 +29,28 @@
     <!-- Infinite Scroll View -->
     <div v-if="viewMode === 'infinite'" class="wishlist-infinite-view" @scroll="handleScroll">
       <div class="movies-grid">
-        <div v-for="movie in wishlistMovies" :key="movie.id" class="movie-item">
-          <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
-          <p>{{ movie.title }}</p>
-        </div>
+        <MovieItem
+            v-for="movie in wishlistMovies"
+            :key="movie.id"
+            :movie="movie"
+            shlistPage 설정 -->
+        />
       </div>
-
-      <!-- 맨 위로 이동 버튼 -->
-      <button v-if="showTopButton" class="top-button" @click="scrollToTop">Top</button>
     </div>
+
+    <!-- 맨 위로 이동 버튼 -->
+    <button v-if="showTopButton" class="top-button" @click="scrollToTop">Top</button>
   </div>
 </template>
 
 <script>
+import MovieItem from "@/components/MovieItem.vue";
+
 export default {
   name: "WishlistMovies",
+  components: {
+    MovieItem
+  },
   data() {
     return {
       wishlistMovies: [],
