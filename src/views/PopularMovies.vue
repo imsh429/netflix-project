@@ -15,6 +15,8 @@
         :currentPage="currentPage"
         :hasMorePages="hasMorePages"
         @fetchPage="fetchMovies"
+        @toggleWishlist="toggleWishlist"
+        :isMovieInWishlist="isMovieInWishlist"
     />
 
     <!-- Infinite Scroll View 컴포넌트 -->
@@ -23,6 +25,8 @@
         :movies="movies"
         :loading="loading"
         @loadMore="loadMoreMovies"
+        @toggleWishlist="toggleWishlist"
+        :isMovieInWishlist="isMovieInWishlist"
     />
   </div>
 </template>
@@ -31,12 +35,17 @@
 import TableView from "@/components/TableView.vue";
 import InfiniteScrollView from "@/components/InfiniteScrollView.vue";
 import { fetchMovies, endpoints } from "@/services/tmdbService.js";
+import {
+  addMovieToWishlist,
+  removeMovieFromWishlist,
+  isMovieInWishlist,
+} from "@/utils/storage.js";
 
 export default {
   name: "PopularMovies",
   components: {
     TableView,
-    InfiniteScrollView
+    InfiniteScrollView,
   },
   data() {
     return {
@@ -44,7 +53,7 @@ export default {
       loading: true,
       viewMode: "table",
       currentPage: 1,
-      hasMorePages: true
+      hasMorePages: true,
     };
   },
   methods: {
@@ -80,11 +89,22 @@ export default {
       this.viewMode = view;
       this.movies = [];
       this.fetchMovies(1);
-    }
+    },
+    toggleWishlist(movie) {
+      if (isMovieInWishlist(movie.id)) {
+        removeMovieFromWishlist(movie.id);
+      } else {
+        addMovieToWishlist(movie);
+      }
+      this.$forceUpdate(); // 컴포넌트를 강제로 다시 렌더링하여 UI 반영
+    },
+    isMovieInWishlist(movieId) {
+      return isMovieInWishlist(movieId);
+    },
   },
   async created() {
     await this.fetchMovies(this.currentPage);
-  }
+  },
 };
 </script>
 
@@ -102,5 +122,8 @@ export default {
 }
 .view-toggle button.active {
   font-weight: bold;
+}
+.movie-item.wishlist-added {
+  border: 2px solid #ff0000; /* 추천 영화 스타일 차별화 */
 }
 </style>
