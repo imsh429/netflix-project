@@ -1,6 +1,7 @@
 <template>
   <div class="home-page">
-    <h1>넷플릭스 클론</h1>
+    <!-- Hero Section 추가 -->
+    <HeroSection v-if="featuredMovie" :movie="featuredMovie" />
 
     <!-- 인기 영화 섹션 -->
     <section>
@@ -32,6 +33,7 @@
 </template>
 
 <script>
+import HeroSection from "@/components/HeroSection.vue";
 import MovieRow from "@/components/MovieRow.vue";
 import { fetchMovies, endpoints } from "@/services/tmdbService.js";
 import { getWishlistMovies } from "@/utils/storage.js";
@@ -39,10 +41,12 @@ import { getWishlistMovies } from "@/utils/storage.js";
 export default {
   name: "HomePage",
   components: {
+    HeroSection,
     MovieRow
   },
   data() {
     return {
+      featuredMovie: null,
       popularMovies: [],
       nowPlayingMovies: [],
       genreMovies: [],
@@ -61,6 +65,9 @@ export default {
       this.popularMovies = popularData.results;
       this.nowPlayingMovies = nowPlayingData.results;
       this.genreMovies = genreData.results;
+
+      // 인기 영화 중 첫 번째 영화를 featuredMovie로 설정
+      this.featuredMovie = popularData.results[0];
     } catch (error) {
       console.error("영화 데이터를 불러오는 중 오류:", error);
     } finally {

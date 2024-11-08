@@ -1,5 +1,5 @@
 <template>
-  <section class="hero-section" :style="{ backgroundImage: `url(${movie.backdrop_path})` }">
+  <section class="hero-section" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})` }">
     <div class="overlay">
       <div class="movie-info">
         <h1>{{ movie.title }}</h1>
@@ -21,7 +21,6 @@ export default {
   },
   methods: {
     handleMoreInfo() {
-      // "자세히 보기" 버튼 클릭 시 동작
       this.$router.push(`/movie/${this.movie.id}`);
     },
   },

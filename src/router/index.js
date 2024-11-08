@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/views/HomePage.vue';
 import PopularMovies from '@/views/PopularMovies.vue';
-import SearchMovies from '@/views/SearchMovies.vue'; // SearchMovies 컴포넌트 추가
+import SearchMovies from '@/views/SearchMovies.vue';
 import WishlistMovies from '@/views/WishlistMovies.vue';
+import MovieDetail from '@/views/MovieDetail.vue'; // MovieDetail 컴포넌트 추가
 
 const routes = [
     {
@@ -13,17 +14,23 @@ const routes = [
     {
         path: '/popular',
         name: 'PopularMovies',
-        component: PopularMovies // 인기 영화 페이지 경로 추가
+        component: PopularMovies
     },
     {
-        path: '/search', // /search 경로 추가
+        path: '/search',
         name: 'SearchMovies',
         component: SearchMovies
     },
     {
-        path: '/wishlist', // /wishlist 경로 추가
+        path: '/wishlist',
         name: 'WishlistMovies',
         component: WishlistMovies
+    },
+    {
+        path: '/movie/:id', // 영화 상세 페이지 경로 추가
+        name: 'MovieDetail',
+        component: MovieDetail,
+        props: true // route params를 props로 전달
     }
 ];
 
