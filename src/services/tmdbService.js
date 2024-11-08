@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiKey = 'ae551acb587870f6d116fb74e4e9fe28'; // 발급받은 API 키를 여기에 입력하세요.
+const apiKey = 'ae551acb587870f6d116fb74e4e9fe28'; // 발급받은 API 키
 const language = 'ko-KR';
 
 const endpoints = {
@@ -21,4 +21,16 @@ const fetchMovies = async (endpoint, page = 1) => {
     }
 };
 
-export { endpoints, fetchMovies };
+// 영화 세부 정보를 요청하는 함수
+const fetchMovieDetails = async (id) => {
+    try {
+        const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=${language}`;
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error("영화 세부 정보를 불러오는 중 오류가 발생했습니다:", error);
+        throw error;
+    }
+};
+
+export { endpoints, fetchMovies, fetchMovieDetails };

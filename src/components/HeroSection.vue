@@ -21,7 +21,11 @@ export default {
   },
   methods: {
     handleMoreInfo() {
-      this.$router.push(`/movie/${this.movie.id}`);
+      if (this.movie && this.movie.id) {
+        this.$router.push(`/movie/${this.movie.id}`);
+      } else {
+        console.error("영화 ID가 존재하지 않습니다.");
+      }
     },
   },
 };
@@ -34,7 +38,11 @@ export default {
   background-position: center;
   height: 500px;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 .overlay {
   position: absolute;
   top: 0;
@@ -46,9 +54,24 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .movie-info {
   text-align: center;
+  max-width: 600px;
+  padding: 1rem;
 }
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
 button {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
@@ -56,5 +79,28 @@ button {
   border: none;
   color: white;
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 300px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+
+  button {
+    padding: 0.4rem 0.8rem;
+  }
 }
 </style>
