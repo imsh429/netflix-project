@@ -1,5 +1,5 @@
 // src/services/AuthenticationService.js
-import { tryLogin, tryRegister } from "@/Authentication.js";
+import { tryLogin, tryRegister } from "../Authentication.js";
 
 const login = async (email, password) => {
     return new Promise((resolve, reject) => {
