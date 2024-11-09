@@ -14,43 +14,44 @@
     </div>
 
     <!-- 로딩 표시 -->
-    <div v-if="loading" class="loading">로딩 중...</div>
+    <div v-if="isLoading" class="loading">Loading...</div>
 
     <!-- 맨 위로 이동 버튼 -->
-    <button v-if="showTopButton" class="top-button" @click="scrollToTop">Top</button>
+    <button v-if="showTopButton" @click="scrollToTop" class="top-button">Top</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: "InfiniteScrollView",
-  props: {
-    movies: Array,
-    loading: Boolean,
-    isMovieInWishlist: Function, // 추천 영화인지 확인하는 함수
-  },
+  props: ["movies", "isMovieInWishlist", "toggleWishlist"],
   data() {
     return {
+      isLoading: false,
       showTopButton: false,
     };
   },
   methods: {
-    handleScroll() {
-      const bottom = this.$el.scrollTop + this.$el.clientHeight >= this.$el.scrollHeight;
-      this.showTopButton = this.$el.scrollTop > 200;
-      if (bottom) {
-        this.$emit("loadMore"); // 무한 스크롤 이벤트
+    handleScroll(event) {
+      const element = event.target;
+      if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+        this.loadMoreMovies();
       }
+      this.showTopButton = element.scrollTop > 300;
+    },
+    loadMoreMovies() {
+      this.isLoading = true;
+      // 영화 로딩 로직 (예: API 호출)
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 1000);
     },
     scrollToTop() {
-      this.$el.scrollTop = 0;
-    },
-    toggleWishlist(movie) {
-      this.$emit("toggleWishlist", movie); // 부모 컴포넌트로 영화 정보 전달
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
 };
 </script>
+
 
 <style scoped>
 .infinite-view {
