@@ -9,73 +9,51 @@
       </thead>
       <tbody>
       <tr
-          v-for="movie in movies"
+          v-for="movie in paginatedMovies"
           :key="movie.id"
           @click="toggleWishlist(movie)"
           :class="{ 'wishlist-added': isMovieInWishlist(movie.id) }"
       >
-        <td>
-          <img
-              :src="`https://image.tmdb.org/t/p/w200${movie.poster_path}`"
-              :alt="movie.title"
-          />
-        </td>
+        <td><img :src="`https://image.tmdb.org/t/p/w200${movie.poster_path}`" :alt="movie.title" /></td>
         <td>{{ movie.title }}</td>
       </tr>
       </tbody>
     </table>
 
-    <!-- Pagination -->
+    <!-- Pagination 버튼 -->
     <div class="pagination">
-      <button @click="$emit('fetchPage', currentPage - 1)" :disabled="currentPage === 1">이전</button>
+      <button @click="prevPage" :disabled="currentPage === 1">이전</button>
       <span>페이지 {{ currentPage }}</span>
-      <button @click="$emit('fetchPage', currentPage + 1)" :disabled="!hasMorePages">다음</button>
+      <button @click="nextPage" :disabled="currentPage === totalPages">다음</button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "TableView",
-  props: {
-    movies: Array,
-    currentPage: Number,
-    hasMorePages: Boolean,
-    isMovieInWishlist: Function // 부모 컴포넌트에서 전달된 함수
+  props: ["movies", "isMovieInWishlist", "toggleWishlist"],
+  data() {
+    return {
+      currentPage: 1,
+      itemsPerPage: 10,
+    };
+  },
+  computed: {
+    paginatedMovies() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      return this.movies.slice(start, start + this.itemsPerPage);
+    },
+    totalPages() {
+      return Math.ceil(this.movies.length / this.itemsPerPage);
+    },
   },
   methods: {
-    toggleWishlist(movie) {
-      this.$emit("toggleWishlist", movie); // 부모 컴포넌트로 영화 데이터를 전달하여 추천 영화 목록 업데이트
-    }
-  }
+    nextPage() {
+      if (this.currentPage < this.totalPages) this.currentPage++;
+    },
+    prevPage() {
+      if (this.currentPage > 1) this.currentPage--;
+    },
+  },
 };
 </script>
-
-<style scoped>
-.table-view table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.table-view th, .table-view td {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  text-align: center;
-  cursor: pointer;
-}
-.table-view img {
-  width: 100px;
-  transition: transform 0.3s ease;
-}
-.table-view img:hover {
-  transform: scale(1.05);
-}
-.wishlist-added {
-  border: 2px solid #ff0000; /* 추천 영화 스타일 차별화 */
-}
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-</style>

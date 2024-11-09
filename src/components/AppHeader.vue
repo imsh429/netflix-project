@@ -45,6 +45,16 @@ export default {
       }
     },
   },
+  watch: {
+    // 로그인 상태 변경을 감지하고 업데이트
+    isLoggedIn(newStatus) {
+      if (newStatus) {
+        this.userId = localStorage.getItem("userId") || "사용자";
+      } else {
+        this.userId = "";
+      }
+    }
+  },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
     this.isLoggedIn = checkLoginStatus(); // 로그인 상태 확인
