@@ -11,33 +11,48 @@
     </nav>
     <div class="user-info">
       <span v-if="isLoggedIn">{{ userId }}</span>
-      <button @click="toggleLogin">{{ isLoggedIn ? '로그아웃' : '로그인' }}</button>
+      <button @click="handleAuthAction">{{ isLoggedIn ? '로그아웃' : '로그인' }}</button>
     </div>
   </header>
 </template>
 
 <script>
+import { isLoggedIn as checkLoginStatus, logout } from "@/services/AuthenticationService.js";
+
 export default {
   name: "AppHeader",
   data() {
     return {
       isScrolled: false,
       isLoggedIn: false,
-      userId: "사용자ID"
+      userId: "", // 로그인된 사용자 ID 저장
     };
   },
   methods: {
     handleScroll() {
       this.isScrolled = window.scrollY > 50;
     },
-    toggleLogin() {
-      this.isLoggedIn = !this.isLoggedIn;
-    }
+    handleAuthAction() {
+      if (this.isLoggedIn) {
+        // 로그아웃
+        logout(); // 로그아웃 함수 호출
+        this.isLoggedIn = false;
+        this.userId = "";
+        this.$router.push("/signin");
+      } else {
+        // 로그인 페이지로 이동
+        this.$router.push("/signin");
+      }
+    },
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
+    this.isLoggedIn = checkLoginStatus(); // 로그인 상태 확인
+    if (this.isLoggedIn) {
+      this.userId = localStorage.getItem("userId") || "사용자";
+    }
   },
-  unmounted() { // Vue 3에서는 'unmounted' 사용
+  unmounted() {
     window.removeEventListener("scroll", this.handleScroll);
   }
 };
@@ -53,26 +68,32 @@ header {
   transition: background-color 0.3s ease;
   color: white;
 }
+
 header.scrolled {
   background-color: rgba(0, 0, 0, 0.9);
 }
+
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
 }
+
 .nav-links {
   display: flex;
   gap: 1rem;
 }
+
 .nav-links a {
   color: white;
   text-decoration: none;
 }
+
 .user-info {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
+
 button {
   background: none;
   border: 1px solid white;
@@ -81,6 +102,7 @@ button {
   cursor: pointer;
   transition: background 0.3s ease;
 }
+
 button:hover {
   background: white;
   color: black;

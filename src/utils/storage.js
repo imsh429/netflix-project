@@ -27,3 +27,18 @@ export function removeMovieFromWishlist(movieId) {
 export function isMovieInWishlist(movieId) {
     return getWishlistMovies().some(m => m.id === movieId);
 }
+
+// API 키를 Local Storage에 저장
+export function setApiKey(apiKey) {
+    localStorage.setItem("TMDb-Key", apiKey);
+}
+
+// Local Storage에서 API 키 가져오기
+export function getApiKey() {
+    return localStorage.getItem("TMDb-Key");
+}
+
+// API 키 삭제
+export function removeApiKey() {
+    localStorage.removeItem("TMDb-Key");
+}
