@@ -9,66 +9,48 @@
           <input type="checkbox" v-model="rememberMe" /> <label>Remember me</label>
         </div>
         <button type="submit">로그인</button>
-        <button @click="switchToSignUp">회원가입으로 이동</button>
+        <button @click="switchToSignUp">회원가입</button>
       </form>
-      <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
-      <toast :message="toastMessage" v-if="showToast" />
     </div>
   </transition>
 </template>
 
 <script>
-import { login } from "@/services/AuthenticationService.js";
-import toast from "@/components/Toast.vue";
-import { setApiKey } from "@/utils/storage.js";
+import { login } from "@/services/AuthenticationService";
 
 export default {
-  name: "SignIn",
-  components: { toast },
   data() {
     return {
-      email: "",
+      email: localStorage.getItem("savedEmail") || "", // Remember me 기능으로 저장된 이메일 불러오기
       password: "",
       rememberMe: false,
-      errorMessage: null,
-      toastMessage: "",
-      showToast: false,
     };
   },
   methods: {
     async handleLogin() {
       try {
-        const response = await login(this.email, this.password);  // TMDB API key로 로그인
-        setApiKey(response);  // API 키를 Local Storage에 저장
-        if (this.rememberMe) localStorage.setItem("rememberedEmail", this.email);
-        this.toastMessage = "로그인 성공!";
-        this.showToast = true;
-        setTimeout(() => this.$router.push("/"), 1500);  // Redirect after showing toast
+        const message = await login(this.email, this.password);
+        alert(message); // 성공 메시지
+        if (this.rememberMe) {
+          localStorage.setItem("savedEmail", this.email); // Remember me가 체크된 경우 이메일 저장
+        } else {
+          localStorage.removeItem("savedEmail"); // 체크 해제된 경우 이메일 제거
+        }
+        this.$router.push("/"); // 로그인 성공 시 메인 페이지로 이동
       } catch (error) {
-        this.errorMessage = error;
+        alert(error); // 실패 메시지
       }
     },
     switchToSignUp() {
       this.$router.push("/signup");
     },
     validateEmail() {
-      const emailPattern = /^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/;
+      // 이메일 형식 확인 로직
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailPattern.test(this.email)) {
-        this.errorMessage = "유효한 이메일 형식이 아닙니다.";
+        alert("이메일 형식이 올바르지 않습니다.");
       }
     },
   },
-  mounted() {
-    this.email = localStorage.getItem("rememberedEmail") || "";
-  },
 };
 </script>
-
-<style scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-</style>

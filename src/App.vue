@@ -1,21 +1,28 @@
 <template>
   <div id="app">
-    <AppHeader /> <!-- 헤더 추가 -->
-    <router-view /> <!-- 라우터를 통해 페이지가 표시되는 부분 -->
+    <header-component /> <!-- 헤더 컴포넌트 -->
+    <transition name="page">
+      <router-view /> <!-- 페이지 전환 시 애니메이션 적용 -->
+    </transition>
   </div>
 </template>
 
 <script>
-import AppHeader from "@/components/AppHeader.vue";
+import HeaderComponent from '@/components/AppHeader.vue';
 
 export default {
-  name: "App",
   components: {
-    AppHeader
-  }
+    HeaderComponent,
+  },
 };
 </script>
 
 <style>
-/* 전역 스타일을 필요에 따라 추가하세요 */
+/* 전역 페이지 전환 애니메이션 */
+.page-enter-active, .page-leave-active {
+  transition: opacity 0.5s ease;
+}
+.page-enter, .page-leave-to {
+  opacity: 0;
+}
 </style>

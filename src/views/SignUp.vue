@@ -13,28 +13,23 @@
         <button @click="switchToSignIn">로그인으로 이동</button>
       </form>
       <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
-      <toast :message="toastMessage" v-if="showToast" />
     </div>
   </transition>
 </template>
 
 <script>
 import { register } from "@/services/AuthenticationService.js";
-import toast from "@/components/Toast.vue";
 import { setApiKey } from "@/utils/storage.js";
 
 export default {
   name: "SignUp",
-  components: { toast },
   data() {
     return {
       email: "",
       password: "",
       confirmPassword: "",
       agreedTerms: false,
-      errorMessage: null,
-      toastMessage: "",
-      showToast: false,
+      errorMessage: null
     };
   },
   methods: {
@@ -44,11 +39,10 @@ export default {
         return;
       }
       try {
-        const response = await register(this.email, this.password);  // TMDB API로 회원가입
-        setApiKey(response);  // API 키를 Local Storage에 저장
-        this.toastMessage = "회원가입 성공!";
-        this.showToast = true;
-        setTimeout(() => this.$router.push("/signin"), 1500);  // Redirect after showing toast
+        const response = await register(this.email, this.password);
+        setApiKey(response);
+        alert("회원가입 성공!");
+        this.$router.push("/signin");
       } catch (error) {
         this.errorMessage = error;
       }
@@ -57,12 +51,12 @@ export default {
       this.$router.push("/signin");
     },
     validateEmail() {
-      const emailPattern = /^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/;
+      const emailPattern = /^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/;
       if (!emailPattern.test(this.email)) {
         this.errorMessage = "유효한 이메일 형식이 아닙니다.";
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
