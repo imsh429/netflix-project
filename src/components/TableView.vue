@@ -1,61 +1,50 @@
 <template>
   <div class="table-view">
-    <table>
-      <thead>
-      <tr>
-        <th>포스터</th>
-        <th>영화 제목</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr
-          v-for="movie in paginatedMovies"
-          :key="movie.id"
-          @click="toggleWishlist(movie)"
-          :class="{ 'wishlist-added': isMovieInWishlist(movie.id) }"
-      >
-        <td><img :src="`https://image.tmdb.org/t/p/w200${movie.poster_path}`" :alt="movie.title" /></td>
-        <td>{{ movie.title }}</td>
-      </tr>
-      </tbody>
-    </table>
-
-    <!-- Pagination 버튼 -->
+    <div v-for="movie in movies" :key="movie.id" class="movie-item">
+      <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
+      <h3>{{ movie.title }}</h3>
+    </div>
     <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 1">이전</button>
-      <span>페이지 {{ currentPage }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages">다음</button>
+      <button @click="$emit('fetchPage', currentPage - 1)" :disabled="currentPage === 1">
+        이전
+      </button>
+      <span>{{ currentPage }}</span>
+      <button @click="$emit('fetchPage', currentPage + 1)" :disabled="!hasMorePages">
+        다음
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["movies", "isMovieInWishlist", "toggleWishlist"],
-  data() {
-    return {
-      currentPage: 1,
-      itemsPerPage: 10,
-    };
-  },
-  computed: {
-    paginatedMovies() {
-      // movies가 정의되지 않았을 경우 빈 배열 반환
-      const movies = this.movies || [];
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      return movies.slice(start, start + this.itemsPerPage);
-    },
-    totalPages() {
-      return Math.ceil((this.movies || []).length / this.itemsPerPage); // movies가 undefined일 때 빈 배열로 처리
-    },
-  },
-  methods: {
-    nextPage() {
-      if (this.currentPage < this.totalPages) this.currentPage++;
-    },
-    prevPage() {
-      if (this.currentPage > 1) this.currentPage--;
-    },
+  name: "TableView",
+  props: {
+    movies: Array,
+    currentPage: Number,
+    hasMorePages: Boolean,
   },
 };
 </script>
+
+<style scoped>
+.table-view {
+  display: flex;
+  flex-direction: column;
+}
+.movie-item {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+}
+.movie-item img {
+  width: 100px;
+  margin-right: 1rem;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+</style>

@@ -12,16 +12,17 @@
     <TableView
         v-if="viewMode === 'table'"
         :movies="movies"
-        :isMovieInWishlist="isMovieInWishlist"
-        @toggleWishlist="toggleWishlist"
+        :currentPage="currentPage"
+        :hasMorePages="hasMorePages"
+        @fetchPage="fetchMovies"
     />
 
     <!-- Infinite Scroll View 컴포넌트 -->
     <InfiniteScrollView
         v-if="viewMode === 'infinite'"
         :movies="movies"
-        :isMovieInWishlist="isMovieInWishlist"
-        @toggleWishlist="toggleWishlist"
+        :loading="loading"
+        @loadMore="loadMoreMovies"
     />
   </div>
 </template>
@@ -29,12 +30,7 @@
 <script>
 import TableView from "@/components/TableView.vue";
 import InfiniteScrollView from "@/components/InfiniteScrollView.vue";
-import { fetchMovies, endpoints } from "@/services/tmdbService.js";
-import {
-  addMovieToWishlist,
-  removeMovieFromWishlist,
-  isMovieInWishlist,
-} from "@/utils/storage.js";
+import { fetchPopularMovies } from "@/services/tmdbService.js";
 
 export default {
   name: "PopularMovies",
@@ -55,10 +51,10 @@ export default {
     async fetchMovies(page = 1) {
       this.loading = true;
       try {
-        const data = await fetchMovies(endpoints.popular, page);
-        this.movies = data.results;
+        const data = await fetchPopularMovies(page);
+        this.movies = data;
         this.currentPage = page;
-        this.hasMorePages = data.page < data.total_pages;
+        this.hasMorePages = data.length > 0; // 다음 페이지가 있는지 여부
       } catch (error) {
         console.error("영화 데이터를 불러오는 중 오류:", error);
       } finally {
@@ -70,10 +66,10 @@ export default {
       this.loading = true;
       try {
         const nextPage = this.currentPage + 1;
-        const data = await fetchMovies(endpoints.popular, nextPage);
-        this.movies = [...this.movies, ...data.results];
+        const data = await fetchPopularMovies(nextPage);
+        this.movies = [...this.movies, ...data];
         this.currentPage = nextPage;
-        this.hasMorePages = data.page < data.total_pages;
+        this.hasMorePages = data.length > 0;
       } catch (error) {
         console.error("추가 영화 데이터를 불러오는 중 오류:", error);
       } finally {
@@ -84,17 +80,6 @@ export default {
       this.viewMode = view;
       this.movies = [];
       this.fetchMovies(1);
-    },
-    toggleWishlist(movie) {
-      if (isMovieInWishlist(movie.id)) {
-        removeMovieFromWishlist(movie.id);
-      } else {
-        addMovieToWishlist(movie);
-      }
-      this.$forceUpdate(); // 컴포넌트를 강제로 다시 렌더링하여 UI 반영
-    },
-    isMovieInWishlist(movieId) {
-      return isMovieInWishlist(movieId);
     },
   },
   async created() {
@@ -117,8 +102,5 @@ export default {
 }
 .view-toggle button.active {
   font-weight: bold;
-}
-.movie-item.wishlist-added {
-  border: 2px solid #ff0000; /* 추천 영화 스타일 차별화 */
 }
 </style>
