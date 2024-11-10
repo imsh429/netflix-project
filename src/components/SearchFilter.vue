@@ -1,5 +1,6 @@
 <template>
   <div class="search-filter">
+    <!-- 장르 필터 -->
     <label>
       장르:
       <select v-model="selectedGenre">
@@ -12,6 +13,7 @@
       </select>
     </label>
 
+    <!-- 평점 필터 -->
     <label>
       평점:
       <select v-model="selectedRating">
@@ -23,6 +25,18 @@
       </select>
     </label>
 
+    <!-- 정렬 필터 -->
+    <label>
+      정렬:
+      <select v-model="selectedSort">
+        <option value="">선택 안함</option>
+        <option value="popularity">인기순</option>
+        <option value="release_date">개봉년도</option>
+        <!-- 다른 정렬 옵션 추가 가능 -->
+      </select>
+    </label>
+
+    <!-- 필터 적용 및 초기화 버튼 -->
     <button @click="applyFilters">필터 적용</button>
     <button @click="clearFilters">필터 초기화</button>
   </div>
@@ -35,6 +49,7 @@ export default {
     return {
       selectedGenre: "",
       selectedRating: "",
+      selectedSort: "", // 정렬 옵션 추가
     };
   },
   methods: {
@@ -42,13 +57,34 @@ export default {
       this.$emit("applyFilters", {
         genre: this.selectedGenre,
         rating: this.selectedRating,
+        sort: this.selectedSort, // 정렬 값 전달
       });
     },
     clearFilters() {
       this.selectedGenre = "";
       this.selectedRating = "";
+      this.selectedSort = ""; // 정렬 옵션 초기화
       this.$emit("clearFilters");
     }
   }
 };
 </script>
+
+<style scoped>
+.search-filter {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+</style>
