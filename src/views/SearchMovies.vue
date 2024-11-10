@@ -2,72 +2,82 @@
   <div class="search-movies">
     <h1>영화 검색</h1>
 
-    <!-- 필터링 UI -->
-    <div class="filter-section">
-      <select v-model="selectedGenre" @change="applyFilters">
-        <option value="">장르 선택</option>
-        <option v-for="genre in genres" :key="genre.id" :value="genre.id">{{ genre.name }}</option>
-      </select>
+    <!-- 필터링 컴포넌트 -->
+    <SearchFilter
+        @applyFilters="applyFilters"
+        @clearFilters="clearFilters"
+    />
 
-      <select v-model="selectedRating" @change="applyFilters">
-        <option value="">평점 선택</option>
-        <option v-for="rating in ratings" :key="rating">{{ rating }}</option>
-      </select>
-
-      <select v-model="selectedSort" @change="applyFilters">
-        <option value="">정렬 기준 선택</option>
-        <option v-for="option in sortOptions" :key="option">{{ option }}</option>
-      </select>
-
-      <button @click="resetFilters">초기화</button>
-    </div>
-
-    <!-- 검색 결과 -->
-    <SearchResults :filters="{ genre: selectedGenre, rating: selectedRating, sort: selectedSort }" />
+    <!-- 검색 결과 컴포넌트 -->
+    <SearchResults
+        :movies="movies"
+        :loading="loading"
+    />
   </div>
 </template>
 
 <script>
+import { fetchMoviesByGenre, fetchMoviesByRating, fetchPopularMovies, fetchMoviesByGenreAndRating } from "@/services/tmdbService.js";
+import SearchFilter from "@/components/SearchFilter.vue";
 import SearchResults from "@/components/SearchResults.vue";
-import { fetchGenres } from "@/services/tmdbService.js"; // 장르 데이터 가져오기 함수가 필요하다면 사용
 
 export default {
+  name: "SearchMovies",
   components: {
+    SearchFilter,
     SearchResults
   },
   data() {
     return {
-      genres: [], // 장르 데이터 초기화
-      ratings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // 평점 범위
-      sortOptions: ["인기순", "최신순", "높은 평점순"],
-      selectedGenre: "",
-      selectedRating: "",
-      selectedSort: "",
+      movies: [],
+      genre: null,
+      rating: null,
+      loading: true,
     };
   },
-  mounted() {
-    this.loadGenres(); // 장르 데이터 로드
-  },
   methods: {
-    async loadGenres() {
-      // 장르 데이터를 API에서 가져오는 경우
-      const genreData = await fetchGenres(); // TMDB API에서 장르를 가져오는 함수 예시
-      this.genres = genreData;
+    async applyFilters(filters) {
+      this.loading = true;
+      try {
+        const { genre, rating } = filters;
+
+        if (genre && rating) {
+          // 장르와 평점을 동시에 필터링
+          this.movies = await fetchMoviesByGenreAndRating(genre, rating);
+        } else if (genre) {
+          // 장르로만 필터링
+          this.movies = await fetchMoviesByGenre(genre);
+        } else if (rating) {
+          // 평점으로만 필터링
+          this.movies = await fetchMoviesByRating(rating);
+        } else {
+          // 기본 인기 영화 불러오기
+          this.movies = await fetchPopularMovies();
+        }
+      } catch (error) {
+        console.error("영화 필터링 중 오류가 발생했습니다:", error);
+      } finally {
+        this.loading = false;
+      }
     },
-    applyFilters() {
-      // 필터 변경 사항을 SearchResults로 전달
-      console.log("필터가 적용되었습니다.", {
-        genre: this.selectedGenre,
-        rating: this.selectedRating,
-        sort: this.selectedSort,
-      });
+    async clearFilters() {
+      this.genre = null;
+      this.rating = null;
+      await this.loadDefaultMovies();
     },
-    resetFilters() {
-      this.selectedGenre = "";
-      this.selectedRating = "";
-      this.selectedSort = "";
-      this.applyFilters();
+    async loadDefaultMovies() {
+      this.loading = true;
+      try {
+        this.movies = await fetchPopularMovies();
+      } catch (error) {
+        console.error("영화를 불러오는 중 오류가 발생했습니다:", error);
+      } finally {
+        this.loading = false;
+      }
     }
+  },
+  async created() {
+    await this.loadDefaultMovies();
   }
 };
 </script>

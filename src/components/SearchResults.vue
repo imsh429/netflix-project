@@ -1,29 +1,18 @@
+<template>
+  <div class="search-results">
+    <div v-if="loading" class="loading">로딩 중...</div>
+    <div v-else>
+      <div v-for="movie in movies" :key="movie.id" class="movie-item">
+        <img :src="`https://image.tmdb.org/t/p/w200${movie.poster_path}`" :alt="movie.title" />
+        <h3>{{ movie.title }}</h3>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script>
-import { fetchMovies } from "@/services/tmdbService.js";
-
 export default {
-  props: ["filters"],
-  data() {
-    return {
-      movies: [],
-    };
-  },
-  watch: {
-    filters: {
-      immediate: true,
-      handler(newFilters) {
-        this.loadMovies(newFilters);
-      }
-    }
-  },
-  methods: {
-    async loadMovies(filters) {
-      const { genre, rating, sort } = filters;
-      console.log("필터를 바탕으로 영화를 로드합니다:", filters);
-
-      // fetchMovies 호출 시 필터 적용
-      this.movies = await fetchMovies("popular", genre, rating, sort);
-    }
-  }
+  name: "SearchResults",
+  props: ["movies", "loading"]
 };
 </script>
