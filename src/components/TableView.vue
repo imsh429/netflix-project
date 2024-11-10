@@ -40,11 +40,13 @@ export default {
   },
   computed: {
     paginatedMovies() {
+      // movies가 정의되지 않았을 경우 빈 배열 반환
+      const movies = this.movies || [];
       const start = (this.currentPage - 1) * this.itemsPerPage;
-      return this.movies.slice(start, start + this.itemsPerPage);
+      return movies.slice(start, start + this.itemsPerPage);
     },
     totalPages() {
-      return Math.ceil(this.movies.length / this.itemsPerPage);
+      return Math.ceil((this.movies || []).length / this.itemsPerPage); // movies가 undefined일 때 빈 배열로 처리
     },
   },
   methods: {

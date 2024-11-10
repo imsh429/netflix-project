@@ -1,33 +1,29 @@
 <template>
   <div class="home-page">
-    <!-- Hero Section 추가 -->
     <HeroSection v-if="featuredMovie" :movie="featuredMovie" />
 
-    <!-- 인기 영화 섹션 -->
     <section>
       <h2>인기 영화</h2>
       <div v-if="loadingPopular" class="loading-spinner">로딩 중...</div>
-      <MovieRow v-else :movies="popularMovies" />
+      <MovieRow v-else :movies="popularMovies" @toggleFavorite="toggleFavorite" />
     </section>
 
-    <!-- 현재 상영작 섹션 -->
     <section>
       <h2>현재 상영작</h2>
       <div v-if="loadingNowPlaying" class="loading-spinner">로딩 중...</div>
-      <MovieRow v-else :movies="nowPlayingMovies" />
+      <MovieRow v-else :movies="nowPlayingMovies" @toggleFavorite="toggleFavorite" />
     </section>
 
-    <!-- 장르별 영화 섹션 -->
     <section>
-      <h2>장르별 영화</h2>
-      <div v-if="loadingGenre" class="loading-spinner">로딩 중...</div>
-      <MovieRow v-else :movies="genreMovies" />
+      <h2>최고 평점 영화</h2>
+      <div v-if="loadingTopRated" class="loading-spinner">로딩 중...</div>
+      <MovieRow v-else :movies="topRatedMovies" @toggleFavorite="toggleFavorite" />
     </section>
 
-    <!-- 추천 영화 섹션 -->
-    <section v-if="wishlistMovies.length > 0">
-      <h2>추천 영화</h2>
-      <MovieRow :movies="wishlistMovies" />
+    <section>
+      <h2>개봉 예정작</h2>
+      <div v-if="loadingUpcoming" class="loading-spinner">로딩 중...</div>
+      <MovieRow v-else :movies="upcomingMovies" @toggleFavorite="toggleFavorite" />
     </section>
   </div>
 </template>
@@ -35,68 +31,68 @@
 <script>
 import HeroSection from "@/components/HeroSection.vue";
 import MovieRow from "@/components/MovieRow.vue";
-import { fetchMovies, endpoints } from "@/services/tmdbService.js";
-import { getWishlistMovies } from "@/utils/storage.js";
+import { fetchPopularMovies, fetchNowPlayingMovies, fetchTopRatedMovies, fetchUpcomingMovies } from "@/services/tmdbService.js";
 
 export default {
-  name: "HomePage",
-  components: {
-    HeroSection,
-    MovieRow
-  },
+  components: { HeroSection, MovieRow },
   data() {
     return {
       featuredMovie: null,
       popularMovies: [],
       nowPlayingMovies: [],
-      genreMovies: [],
-      wishlistMovies: [],
+      topRatedMovies: [],
+      upcomingMovies: [],
       loadingPopular: true,
       loadingNowPlaying: true,
-      loadingGenre: true
+      loadingTopRated: true,
+      loadingUpcoming: true,
+      favoriteMovies: JSON.parse(localStorage.getItem("favoriteMovies")) || [],
     };
   },
-  async created() {
-    try {
-      const popularData = await fetchMovies(endpoints.popular);
-      const nowPlayingData = await fetchMovies(endpoints.nowPlaying);
-      const genreData = await fetchMovies(endpoints.genre);
+  methods: {
+    async loadMovies() {
+      try {
+        // 각 영화 리스트를 가져오는 TMDB API 호출
+        this.popularMovies = await fetchPopularMovies();
+        this.loadingPopular = false;
 
-      this.popularMovies = popularData.results;
-      this.nowPlayingMovies = nowPlayingData.results;
-      this.genreMovies = genreData.results;
+        this.nowPlayingMovies = await fetchNowPlayingMovies();
+        this.loadingNowPlaying = false;
 
-      // 인기 영화 중 첫 번째 영화를 featuredMovie로 설정
-      this.featuredMovie = popularData.results[0];
-    } catch (error) {
-      console.error("영화 데이터를 불러오는 중 오류:", error);
-    } finally {
-      this.loadingPopular = false;
-      this.loadingNowPlaying = false;
-      this.loadingGenre = false;
+        this.topRatedMovies = await fetchTopRatedMovies();
+        this.loadingTopRated = false;
+
+        this.upcomingMovies = await fetchUpcomingMovies();
+        this.loadingUpcoming = false;
+
+        // 추천 영화에 featuredMovie 설정
+        this.featuredMovie = this.popularMovies[0] || null;
+      } catch (error) {
+        console.error("영화 데이터를 로드하는 중 오류가 발생했습니다:", error);
+      }
+    },
+    toggleFavorite(movie) {
+      // 추천 영화 등록/삭제 및 로컬 스토리지 저장
+      const index = this.favoriteMovies.findIndex(fav => fav.id === movie.id);
+      if (index >= 0) {
+        this.favoriteMovies.splice(index, 1);
+      } else {
+        this.favoriteMovies.push(movie);
+      }
+      localStorage.setItem("favoriteMovies", JSON.stringify(this.favoriteMovies));
     }
-
-    // 추천 영화 데이터를 Local Storage에서 불러오기
-    this.wishlistMovies = getWishlistMovies();
+  },
+  mounted() {
+    this.loadMovies();
   }
 };
 </script>
 
 <style scoped>
-.home-page {
-  padding: 2rem;
-}
+/* 홈 페이지 스타일 */
 .loading-spinner {
   text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-  margin: 1rem 0;
-}
-section {
-  margin-bottom: 2rem;
-}
-h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 1.2em;
+  color: gray;
 }
 </style>
