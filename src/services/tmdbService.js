@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const language = 'ko-KR';
+
+// endpoint 이용해 요청할 API 주소 구성
 const endpoints = {
     popular: '/movie/popular',         // 인기 영화
     nowPlaying: '/movie/now_playing',  // 현재 상영 중인 영화
@@ -10,10 +12,10 @@ const endpoints = {
     discover: '/discover/movie'        // 영화 검색/필터링
 };
 
-// Local Storage에서 API 키를 가져오는 함수
+// Local Storage 에서 API 키를 가져오는 함수
 const getApiKey = () => localStorage.getItem("TMDb-Key");
 
-// 특정 카테고리와 추가 필터로 영화 데이터를 가져오는 함수
+// 특정 카테고리의 영화 데이터 가져오는 '공통'함수
 const fetchMovies = async (category, page = 1, additionalParams = {}) => {
     const apiKey = getApiKey();
     if (!apiKey) {
@@ -38,6 +40,7 @@ const fetchMovies = async (category, page = 1, additionalParams = {}) => {
     }
 };
 
+// Search filter (위 filtering movies 함수에 인자 전달)
 // 장르별 영화 데이터를 가져오는 함수
 const fetchMoviesByGenre = async (genreId, page = 1) => {
     return await fetchMovies('discover', page, { with_genres: genreId });
@@ -53,7 +56,8 @@ const fetchMoviesByGenreAndRating = async (genreId, rating, page = 1) => {
     return await fetchMovies('discover', page, { with_genres: genreId, 'vote_average.gte': rating });
 };
 
-// 각 카테고리별로 데이터를 가져오는 함수들
+
+// main 화면에 사용될  인기영화, 지금 상영중 영화 등
 const fetchPopularMovies = async (page = 1) => await fetchMovies('popular', page);
 const fetchNowPlayingMovies = async (page = 1) => await fetchMovies('nowPlaying', page);
 const fetchUpcomingMovies = async (page = 1) => await fetchMovies('upcoming', page);

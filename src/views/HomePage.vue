@@ -1,6 +1,7 @@
 <template>
   <div class="home-page">
-    <HeroSection v-if="featuredMovie" :movie="featuredMovie" />
+    <!-- HeroSection에 featuredMovies 배열을 movies prop으로 전달 -->
+    <HeroSection v-if="featuredMovies.length" :movies="featuredMovies" />
 
     <section>
       <h2>인기 영화</h2>
@@ -37,7 +38,7 @@ export default {
   components: { HeroSection, MovieRow },
   data() {
     return {
-      featuredMovie: null,
+      featuredMovies: [], // 다중 추천 영화 배열로 설정
       popularMovies: [],
       nowPlayingMovies: [],
       topRatedMovies: [],
@@ -52,7 +53,6 @@ export default {
   methods: {
     async loadMovies() {
       try {
-        // 각 영화 리스트를 가져오는 TMDB API 호출
         this.popularMovies = await fetchPopularMovies();
         this.loadingPopular = false;
 
@@ -65,14 +65,14 @@ export default {
         this.upcomingMovies = await fetchUpcomingMovies();
         this.loadingUpcoming = false;
 
-        // 추천 영화에 featuredMovie 설정
-        this.featuredMovie = this.popularMovies[0] || null;
+        // 인기 영화 중 상위 5개를 featuredMovies 배열에 저장
+        this.featuredMovies = this.popularMovies.slice(0, 5);
+        console.log("Featured Movies:", this.featuredMovies); // 확인용 로그
       } catch (error) {
         console.error("영화 데이터를 로드하는 중 오류가 발생했습니다:", error);
       }
     },
     toggleFavorite(movie) {
-      // 추천 영화 등록/삭제 및 로컬 스토리지 저장
       const index = this.favoriteMovies.findIndex(fav => fav.id === movie.id);
       if (index >= 0) {
         this.favoriteMovies.splice(index, 1);
@@ -89,7 +89,6 @@ export default {
 </script>
 
 <style scoped>
-/* 홈 페이지 스타일 */
 .loading-spinner {
   text-align: center;
   font-size: 1.2em;
