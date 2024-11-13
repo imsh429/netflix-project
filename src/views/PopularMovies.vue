@@ -23,73 +23,55 @@
         v-if="viewMode === 'infinite'"
         :movies="movies"
         :loading="loading"
-        @movie-selected="goToMovieDetail"
         @loadMore="loadMoreMovies"
+        @movie-selected="goToMovieDetail"
     />
   </div>
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router'; // useRouter import 추가
+import { useMovies } from '@/composables/useMovies.js';
 import TableView from "@/components/TableView.vue";
 import InfiniteScrollView from "@/components/InfiniteScrollView.vue";
-import { fetchPopularMovies } from "@/services/tmdbService.js";
 
 export default {
   name: "PopularMovies",
-  components: {
-    TableView,
-    InfiniteScrollView,
-  },
-  data() {
-    return {
-      movies: [],
-      loading: true,
-      viewMode: "table",
-      currentPage: 1,
-      hasMorePages: true,
+  components: { TableView, InfiniteScrollView },
+  setup() {
+    const { movies, loading, currentPage, hasMorePages, fetchMovies, loadMoreMovies } = useMovies();
+
+    const viewMode = ref('table');
+
+    const router = useRouter();
+
+    const changeView = (view) => {
+      viewMode.value = view;
+      fetchMovies(1); // view 변경 시 첫 페이지부터 다시 로딩
     };
-  },
-  methods: {
-    async fetchMovies(page = 1) {
-      this.loading = true;
-      try {
-        const data = await fetchPopularMovies(page);
-        this.movies = data;
-        this.currentPage = page;
-        this.hasMorePages = data.length > 0; // 다음 페이지가 있는지 여부
-      } catch (error) {
-        console.error("영화 데이터를 불러오는 중 오류:", error);
-      } finally {
-        this.loading = false;
-      }
-    },
-    async loadMoreMovies() {
-      if (this.loading || !this.hasMorePages) return;
-      this.loading = true;
-      try {
-        const nextPage = this.currentPage + 1;
-        const data = await fetchPopularMovies(nextPage);
-        this.movies = [...this.movies, ...data];
-        this.currentPage = nextPage;
-        this.hasMorePages = data.length > 0;
-      } catch (error) {
-        console.error("추가 영화 데이터를 불러오는 중 오류:", error);
-      } finally {
-        this.loading = false;
-      }
-    },
-    changeView(view) {
-      this.viewMode = view;
-      this.movies = [];
-      this.fetchMovies(1);
-    },
-    goToMovieDetail(movieId) {
-      // MovieDetail 페이지로 이동
-      this.$router.push({ name: "MovieDetail", params: { id: movieId } });
-    },
-  },
-  async created() {
-    await this.fetchMovies(this.currentPage);
+
+    const goToMovieDetail = (movieId) => {
+      // 라우터를 통해 상세 페이지로 이동
+      router.push({ name: "MovieDetail", params: { id: movieId } });
+    };
+
+    // 컴포넌트가 마운트될 때 첫 페이지 로딩
+    onMounted(() => {
+      fetchMovies(currentPage.value);
+    });
+
+    return {
+      movies,
+      loading,
+      currentPage,
+      hasMorePages,
+      viewMode,
+      changeView,
+      goToMovieDetail,
+      fetchMovies,
+      loadMoreMovies,
+    };
   },
 };
 </script>
