@@ -13,6 +13,7 @@
           class="movie-item"
           @mouseover="hover = movie.id"
           @mouseleave="hover = null"
+          @click="handleMovieClick(movie.id)"
       >
         <img
             :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
@@ -49,6 +50,10 @@ export default {
     },
     scrollRight() {
       this.$refs.movieRow.scrollBy({ left: 300, behavior: "smooth" });
+    },
+    handleMovieClick(movieId) {
+      // 부모 컴포넌트로 movie-selected 이벤트를 전달
+      this.$emit('movie-selected', movieId);
     }
   }
 };

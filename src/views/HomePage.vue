@@ -6,25 +6,45 @@
     <section>
       <h2>인기 영화</h2>
       <div v-if="loadingPopular" class="loading-spinner">로딩 중...</div>
-      <MovieRow v-else :movies="popularMovies" @toggleFavorite="toggleFavorite" />
+      <MovieRow
+          v-else
+          :movies="popularMovies"
+          @movie-selected="goToMovieDetail"
+          @toggleFavorite="toggleFavorite"
+      />
     </section>
 
     <section>
       <h2>현재 상영작</h2>
       <div v-if="loadingNowPlaying" class="loading-spinner">로딩 중...</div>
-      <MovieRow v-else :movies="nowPlayingMovies" @toggleFavorite="toggleFavorite" />
+      <MovieRow
+          v-else
+          :movies="nowPlayingMovies"
+          @movie-selected="goToMovieDetail"
+          @toggleFavorite="toggleFavorite"
+      />
     </section>
 
     <section>
       <h2>최고 평점 영화</h2>
       <div v-if="loadingTopRated" class="loading-spinner">로딩 중...</div>
-      <MovieRow v-else :movies="topRatedMovies" @toggleFavorite="toggleFavorite" />
+      <MovieRow
+          v-else
+          :movies="topRatedMovies"
+          @movie-selected="goToMovieDetail"
+          @toggleFavorite="toggleFavorite"
+      />
     </section>
 
     <section>
       <h2>개봉 예정작</h2>
       <div v-if="loadingUpcoming" class="loading-spinner">로딩 중...</div>
-      <MovieRow v-else :movies="upcomingMovies" @toggleFavorite="toggleFavorite" />
+      <MovieRow
+          v-else
+          :movies="upcomingMovies"
+          @movie-selected="goToMovieDetail"
+          @toggleFavorite="toggleFavorite"
+      />
     </section>
   </div>
 </template>
@@ -47,7 +67,7 @@ export default {
       loadingNowPlaying: true,
       loadingTopRated: true,
       loadingUpcoming: true,
-      favoriteMovies: JSON.parse(localStorage.getItem("favoriteMovies")) || [],
+      favoriteMovies: JSON.parse(localStorage.getItem("favoriteMovies")) || []
     };
   },
   methods: {
@@ -67,7 +87,6 @@ export default {
 
         // 인기 영화 중 상위 5개를 featuredMovies 배열에 저장
         this.featuredMovies = this.popularMovies.slice(0, 5);
-        console.log("Featured Movies:", this.featuredMovies); // 확인용 로그
       } catch (error) {
         console.error("영화 데이터를 로드하는 중 오류가 발생했습니다:", error);
       }
@@ -80,6 +99,10 @@ export default {
         this.favoriteMovies.push(movie);
       }
       localStorage.setItem("favoriteMovies", JSON.stringify(this.favoriteMovies));
+    },
+    goToMovieDetail(movieId) {
+      // MovieDetail 페이지로 이동
+      this.$router.push({ name: "MovieDetail", params: { id: movieId } });
     }
   },
   mounted() {

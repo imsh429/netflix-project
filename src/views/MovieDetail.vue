@@ -63,11 +63,9 @@ export default {
   },
   methods: {
     async loadMovieDetails() {
-      // 영화 상세 정보 가져오기
       this.movie = await fetchMovieDetails(this.id);
     },
     async playTrailer() {
-      // 예고편 불러오기 및 모달 표시
       const trailerKey = await fetchMovieTrailer(this.id);
       if (trailerKey) {
         this.trailerUrl = trailerKey;
