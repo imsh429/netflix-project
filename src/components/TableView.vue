@@ -1,18 +1,23 @@
 <template>
   <div class="table-view">
-    <div v-for="movie in movies" :key="movie.id" class="movie-item">
-      <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
-      <h3>{{ movie.title }}</h3>
-    </div>
-    <div class="pagination">
-      <button @click="$emit('fetchPage', currentPage - 1)" :disabled="currentPage === 1">
-        이전
-      </button>
-      <span>{{ currentPage }}</span>
-      <button @click="$emit('fetchPage', currentPage + 1)" :disabled="!hasMorePages">
-        다음
-      </button>
-    </div>
+    <div
+        v-for="movie in movies"
+        :key="movie.id"
+        class="movie-item"
+        @click="selectMovie(movie.id)"
+    >
+    <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
+    <h3>{{ movie.title }}</h3>
+  </div>
+  <div class="pagination">
+    <button @click="$emit('fetchPage', currentPage - 1)" :disabled="currentPage === 1">
+      이전
+    </button>
+    <span>{{ currentPage }}</span>
+    <button @click="$emit('fetchPage', currentPage + 1)" :disabled="!hasMorePages">
+      다음
+    </button>
+  </div>
   </div>
 </template>
 
@@ -23,6 +28,12 @@ export default {
     movies: Array,
     currentPage: Number,
     hasMorePages: Boolean,
+  },
+  methods: {
+    selectMovie(movieId) {
+      // 부모 컴포넌트로 movie-selected 이벤트를 전달
+      this.$emit("movie-selected", movieId);
+    },
   },
 };
 </script>
@@ -36,6 +47,7 @@ export default {
   display: flex;
   align-items: center;
   margin: 1rem 0;
+  cursor: pointer; /* 클릭 가능한 UI 표시 */
 }
 .movie-item img {
   width: 100px;

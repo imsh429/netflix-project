@@ -15,6 +15,7 @@
         :currentPage="currentPage"
         :hasMorePages="hasMorePages"
         @fetchPage="fetchMovies"
+        @movie-selected="goToMovieDetail"
     />
 
     <!-- Infinite Scroll View 컴포넌트 -->
@@ -22,6 +23,7 @@
         v-if="viewMode === 'infinite'"
         :movies="movies"
         :loading="loading"
+        @movie-selected="goToMovieDetail"
         @loadMore="loadMoreMovies"
     />
   </div>
@@ -80,6 +82,10 @@ export default {
       this.viewMode = view;
       this.movies = [];
       this.fetchMovies(1);
+    },
+    goToMovieDetail(movieId) {
+      // MovieDetail 페이지로 이동
+      this.$router.push({ name: "MovieDetail", params: { id: movieId } });
     },
   },
   async created() {

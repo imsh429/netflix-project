@@ -1,7 +1,15 @@
 <template>
   <div class="infinite-scroll">
-    <div v-for="movie in movies" :key="movie.id" class="movie-item">
-      <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
+    <div
+        v-for="movie in movies"
+        :key="movie.id"
+        class="movie-item"
+        @click="selectMovie(movie.id)"
+    >
+      <img
+          :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+          :alt="movie.title || '영화 포스터'"
+      />
       <h3>{{ movie.title }}</h3>
     </div>
     <div v-if="loading" class="loading">로딩 중...</div>
@@ -24,10 +32,13 @@ export default {
   methods: {
     handleScroll() {
       const bottomOfWindow =
-          window.innerHeight + window.scrollY >= document.documentElement.offsetHeight;
+          window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 100;
       if (bottomOfWindow && !this.loading) {
         this.$emit("loadMore");
       }
+    },
+    selectMovie(movieId) {
+      this.$emit("movie-selected", movieId);
     },
   },
 };
@@ -36,18 +47,24 @@ export default {
 <style scoped>
 .infinite-scroll {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 화면 크기에 맞춰 자동 조정 */
-  gap: 1rem; /* 포스터 사이의 간격 */
-  padding: 1rem; /* 전체 그리드에 여백 추가 */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
 }
+
 .movie-item {
   text-align: center;
+  cursor: pointer;
 }
+
+.movie-item img {
+  width: 100%;
+  border-radius: 8px;
+}
+
 .loading {
   width: 100%;
   text-align: center;
   margin-top: 1rem;
 }
 </style>
-
-
