@@ -1,10 +1,10 @@
 <template>
   <section v-if="currentMovie" class="hero-slider" :style="{ backgroundImage: `url(${backdropUrl})` }">
     <div class="banner-content">
-      <h1>{{ currentMovie.title }}</h1>
+      <h1 @click="goToDetailPage">{{ currentMovie.title }}</h1>
       <p>{{ currentMovie.overview }}</p>
-      <button class="play-btn title-btn">재생</button>
-      <button class="info-btn title-btn" @click="showMoreInfo">상세 정보</button>
+      <button class="play-btn title-btn" @click="playTrailer">재생</button>
+      <button class="info-btn title-btn" @click="goToDetailPage">상세 정보</button>
     </div>
     <!-- 슬라이드 기능이 필요한 경우, 하단의 점을 통해 제어 가능 -->
     <div class="dots">
@@ -13,10 +13,26 @@
             :class="{ active: currentSlide === index }"
             @click="goToSlide(index)"></span>
     </div>
+    <!-- 예고편 모달 창 -->
+    <div v-if="showTrailerModal" class="modal-overlay" @click="closeTrailer">
+      <div class="modal-content" @click.stop>
+        <iframe
+            v-if="trailerUrl"
+            width="100%"
+            height="100%"
+            :src="`https://www.youtube.com/embed/${trailerUrl}`"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+        ></iframe>
+        <button class="close-btn" @click="closeTrailer">닫기</button>
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
+import { fetchMovieTrailer } from "@/services/tmdbService.js";
 export default {
   name: "HeroSection",
   props: {
@@ -29,6 +45,8 @@ export default {
   data() {
     return {
       currentSlide: 0,
+      showTrailerModal: false,
+      trailerUrl: null,
     };
   },
   computed: {
@@ -42,20 +60,36 @@ export default {
     }
   },
   methods: {
-    showMoreInfo() {
-      // 상세 정보 페이지로 이동 (예: /movie/:id)
+    async playTrailer() {
+      // 예고편 URL을 가져와 모달 창에 표시
       if (this.currentMovie) {
-        this.$router.push(`/movie/${this.currentMovie.id}`);
+        const trailerKey = await fetchMovieTrailer(this.currentMovie.id);
+        if (trailerKey) {
+          this.trailerUrl = trailerKey;
+          this.showTrailerModal = true;
+        } else {
+          alert("예고편을 찾을 수 없습니다.");
+        }
+      }
+    },
+    closeTrailer() {
+      this.showTrailerModal = false;
+      this.trailerUrl = null;
+    },
+    goToDetailPage() {
+      // 영화의 상세 페이지로 이동
+      if (this.currentMovie) {
+        this.$router.push({ name: 'MovieDetail', params: { id: this.currentMovie.id } });
       }
     },
     goToSlide(index) {
       this.currentSlide = index;
     },
     startAutoSlide() {
-      // 자동 슬라이드 설정, 5초마다 전환
+      // 자동 슬라이드 설정, 10초마다 전환
       this.slideInterval = setInterval(() => {
         this.currentSlide = (this.currentSlide + 1) % this.movies.length;
-      }, 5000);
+      }, 10000);
     }
   },
   mounted() {

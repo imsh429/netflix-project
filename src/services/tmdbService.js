@@ -40,6 +40,24 @@ const fetchMovies = async (category, page = 1, additionalParams = {}) => {
     }
 };
 
+// 영화 상세 정보를 가져오는 함수
+const fetchMovieDetails = async (movieId) => {
+    const apiKey = getApiKey();
+    if (!apiKey) {
+        console.error("API 키가 설정되지 않았습니다. 로그인 필요");
+        return null;
+    }
+    try {
+        const url = `${API_BASE_URL}/movie/${movieId}?api_key=${apiKey}&language=${language}`;
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error(`영화 상세 정보를 가져오는 중 오류가 발생했습니다 (movieId: ${movieId}):`, error.message);
+        return null;
+    }
+};
+
+
 // Search filter (위 filtering movies 함수에 인자 전달)
 // 장르별 영화 데이터를 가져오는 함수
 const fetchMoviesByGenre = async (genreId, page = 1) => {
@@ -63,6 +81,26 @@ const fetchNowPlayingMovies = async (page = 1) => await fetchMovies('nowPlaying'
 const fetchUpcomingMovies = async (page = 1) => await fetchMovies('upcoming', page);
 const fetchTopRatedMovies = async (page = 1) => await fetchMovies('topRated', page);
 
+// 영화 예고편 정보를 가져오는 함수
+const fetchMovieTrailer = async (movieId) => {
+    const apiKey = getApiKey();
+    if (!apiKey) {
+        console.error("API 키가 설정되지 않았습니다. 로그인 필요");
+        return null;
+    }
+    try {
+        const url = `${API_BASE_URL}/movie/${movieId}/videos?api_key=${apiKey}&language=${language}`;
+        const response = await axios.get(url);
+
+        // TMDB API에서 'Trailer' 타입의 YouTube 영상을 찾음
+        const trailers = response.data.results.filter(video => video.type === 'Trailer' && video.site === 'YouTube');
+        return trailers.length ? trailers[0].key : null; // 예고편이 있으면 첫 번째 YouTube 영상의 키를 반환
+    } catch (error) {
+        console.error(`예고편 데이터를 불러오는 중 오류가 발생했습니다 (movieId: ${movieId}):`, error.message);
+        return null;
+    }
+};
+
 export {
     fetchPopularMovies,
     fetchNowPlayingMovies,
@@ -70,5 +108,7 @@ export {
     fetchTopRatedMovies,
     fetchMoviesByGenre,
     fetchMoviesByRating,
-    fetchMoviesByGenreAndRating
+    fetchMoviesByGenreAndRating,
+    fetchMovieTrailer,
+    fetchMovieDetails
 };
