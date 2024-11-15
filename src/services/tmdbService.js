@@ -74,6 +74,23 @@ const fetchMoviesByGenreAndRating = async (genreId, rating, page = 1) => {
     return await fetchMovies('discover', page, { with_genres: genreId, 'vote_average.gte': rating });
 };
 
+// 검색어에 따라 영화를 가져오는 함수
+const fetchMoviesByQuery = async (query, page = 1) => {
+    const apiKey = getApiKey();
+    if (!apiKey) {
+        console.error("API 키가 설정되지 않았습니다. 로그인 필요");
+        return [];
+    }
+    try {
+        const url = `${API_BASE_URL}/search/movie?api_key=${apiKey}&language=${language}&query=${encodeURIComponent(query)}&page=${page}`;
+        const response = await axios.get(url);
+        return response.data.results || []; // 검색 결과 목록을 반환
+    } catch (error) {
+        console.error(`영화 검색 중 오류가 발생했습니다 (query: ${query}):`, error.message);
+        return [];
+    }
+};
+
 
 // main 화면에 사용될  인기영화, 지금 상영중 영화 등
 const fetchPopularMovies = async (page = 1) => await fetchMovies('popular', page);
@@ -110,5 +127,6 @@ export {
     fetchMoviesByRating,
     fetchMoviesByGenreAndRating,
     fetchMovieTrailer,
-    fetchMovieDetails
+    fetchMovieDetails,
+    fetchMoviesByQuery
 };

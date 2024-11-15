@@ -17,7 +17,7 @@ export default {
   props: ["movies", "loading"],
   methods: {
     onScroll() {
-      const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
+      const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
       if (bottom) {
         this.$emit("loadMore");
       }
@@ -31,26 +31,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.search-results {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.infinite-scroll {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-}
-.movie-item {
-  width: 200px;
-  text-align: center;
-}
-.loading {
-  width: 100%;
-  text-align: center;
-  margin-top: 1rem;
-}
-</style>

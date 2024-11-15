@@ -8,7 +8,7 @@ export function useMovies(category = 'popular') {
     const currentPage = ref(1);
     const hasMorePages = ref(true);
 
-    const fetchMovies = async (page = 1) => {
+    const fetchMovies = async (page, append = false) => {
         loading.value = true;
         try {
             let data;
@@ -30,7 +30,7 @@ export function useMovies(category = 'popular') {
                     console.error("잘못된 카테고리입니다.");
                     data = [];
             }
-            movies.value = page === 1 ? data : [...movies.value, ...data];
+            movies.value = append ? [...movies.value, ...data] : data;
             currentPage.value = page;
             hasMorePages.value = data.length > 0;
         } catch (error) {
@@ -42,7 +42,7 @@ export function useMovies(category = 'popular') {
 
     const loadMoreMovies = async () => {
         if (loading.value || !hasMorePages.value) return;
-        await fetchMovies(currentPage.value + 1);
+        await fetchMovies(currentPage.value + 1, true);
     };
 
     return {

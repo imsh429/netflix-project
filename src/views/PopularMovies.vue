@@ -48,7 +48,7 @@ export default {
 
     const changeView = (view) => {
       viewMode.value = view;
-      fetchMovies(1); // view 변경 시 첫 페이지부터 다시 로딩
+      fetchMovies(1, false); // view 변경 시 첫 페이지부터 다시 로딩
     };
 
     const goToMovieDetail = (movieId) => {
@@ -58,7 +58,7 @@ export default {
 
     // 컴포넌트가 마운트될 때 첫 페이지 로딩
     onMounted(() => {
-      fetchMovies(currentPage.value);
+      fetchMovies(currentPage.value, false);
     });
 
     return {
