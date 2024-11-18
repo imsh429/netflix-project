@@ -1,7 +1,9 @@
 <template>
   <header :class="{ 'scrolled': isScrolled }">
     <div class="logo">
-      <router-link to="/">넷플릭스 클론</router-link>
+      <router-link to="/" class="icon-link">
+        <i class="fas fa-film"></i>
+      </router-link>
     </div>
     <nav class="nav-links">
       <router-link to="/" class="icon-link">
@@ -95,11 +97,6 @@ header.scrolled {
   font-weight: bold;
 }
 
-.nav-links {
-  display: flex;
-  gap: 1.5rem;
-}
-
 .icon-link {
   color: white;
   font-size: 1.5rem;
@@ -109,6 +106,11 @@ header.scrolled {
 
 .icon-link:hover {
   color: #ff0000; /* 강조 색상 */
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
 }
 
 .user-info {
