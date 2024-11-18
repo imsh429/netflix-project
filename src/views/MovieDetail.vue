@@ -11,15 +11,6 @@
       </div>
     </div>
 
-    <div class="movie-info">
-      <h2>영화 정보</h2>
-      <ul>
-        <li><strong>개봉일:</strong> {{ movie.release_date }}</li>
-        <li><strong>장르:</strong> {{ genreNames }}</li>
-        <li><strong>상영 시간:</strong> {{ movie.runtime }}분</li>
-      </ul>
-    </div>
-
     <!-- 예고편 모달 -->
     <div v-if="showTrailerModal" class="modal-overlay" @click="closeTrailer">
       <div class="modal-content" @click.stop>
@@ -57,9 +48,6 @@ export default {
     backdropUrl() {
       return this.movie ? `https://image.tmdb.org/t/p/original${this.movie.backdrop_path}` : '';
     },
-    genreNames() {
-      return this.movie.genres ? this.movie.genres.map(genre => genre.name).join(", ") : "";
-    }
   },
   methods: {
     async loadMovieDetails() {
@@ -88,47 +76,100 @@ export default {
 <style scoped>
 .movie-detail {
   color: white;
+  font-family: 'Poppins', sans-serif;
+  background: #111; /* 배경 어두운 색으로 설정 */
+  min-height: 100vh; /* 화면 전체 채우기 */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
 }
+
 .movie-header {
   position: relative;
-  height: 60vh;
+  height: 100vh; /* 전체 화면 채우기 */
   background-size: cover;
   background-position: center;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
 }
+
 .overlay {
   position: absolute;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 20px;
+  background: rgba(0, 0, 0, 0.7); /* 어두운 배경 */
+  padding: 30px;
   width: 100%;
+  box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.5);
 }
+
+.overlay h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.overlay p {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 80%;
+  margin-bottom: 20px;
+}
+
 .buttons {
-  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
 }
+
 .play-btn {
-  margin-right: 10px;
+  background: linear-gradient(90deg, #e50914, #f40612);
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s;
 }
-.movie-info {
-  padding: 20px;
+
+.play-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #f40612, #e50914);
 }
+
+.buttons span {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
 }
+
 .modal-content {
   position: relative;
   width: 80%;
   height: 60%;
   background-color: black;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  animation: zoomIn 0.3s ease-in-out;
 }
+
 .close-btn {
   position: absolute;
   top: 10px;
@@ -138,5 +179,37 @@ export default {
   font-size: 20px;
   cursor: pointer;
   border: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .overlay h1 {
+    font-size: 2rem;
+  }
+
+  .overlay p {
+    font-size: 0.9rem;
+  }
+
+  .play-btn {
+    padding: 8px 15px;
+  }
 }
 </style>
