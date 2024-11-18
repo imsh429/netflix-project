@@ -13,13 +13,24 @@
           class="movie-item"
           @mouseover="hover = movie.id"
           @mouseleave="hover = null"
-          @click="handleMovieClick(movie.id)"
       >
-        <img
-            :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
-            :alt="movie.title"
-            :class="{ hover: hover === movie.id }"
-        />
+        <div class="poster-container">
+          <!-- 영화 포스터 -->
+          <img
+              :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+              :alt="movie.title"
+              :class="{ hover: hover === movie.id }"
+              @click="handleMovieClick(movie.id)"
+          />
+          <!-- 하트 버튼 -->
+          <button
+              class="wishlist-btn"
+              :class="{ active: isInWishlist(movie.id) }"
+              @click.stop="toggleWishlist(movie)"
+          >
+            ❤️
+          </button>
+        </div>
         <p class="movie-title">{{ movie.title }}</p>
       </div>
     </div>
@@ -32,6 +43,8 @@
 </template>
 
 <script>
+import { addMovieToWishlist, removeMovieFromWishlist, isMovieInWishlist } from "@/utils/storage.js";
+
 export default {
   props: {
     movies: {
@@ -53,7 +66,20 @@ export default {
     },
     handleMovieClick(movieId) {
       // 부모 컴포넌트로 movie-selected 이벤트를 전달
-      this.$emit('movie-selected', movieId);
+      this.$emit("movie-selected", movieId);
+    },
+    toggleWishlist(movie) {
+      // 위시리스트 추가/삭제
+      if (isMovieInWishlist(movie.id)) {
+        removeMovieFromWishlist(movie.id);
+      } else {
+        addMovieToWishlist(movie);
+      }
+      this.$forceUpdate(); // 위시리스트 상태 반영
+    },
+    isInWishlist(movieId) {
+      // 위시리스트에 영화가 있는지 확인
+      return isMovieInWishlist(movieId);
     }
   }
 };
@@ -71,12 +97,12 @@ export default {
   gap: 16px;
   overflow-x: auto;
   padding: 20px 0;
-  background-color: #141414; /* 어두운 배경 */
+  background-color: #141414;
   scroll-behavior: smooth;
 }
 
 .movie-row::-webkit-scrollbar {
-  display: none; /* 스크롤바 숨기기 */
+  display: none;
 }
 
 .scroll-button {
@@ -111,6 +137,10 @@ export default {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.poster-container {
+  position: relative;
+}
+
 .movie-item img {
   width: 100%;
   border-radius: 10px;
@@ -127,5 +157,27 @@ export default {
   color: #fff;
   font-size: 16px;
   text-align: center;
+}
+
+.wishlist-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 5px;
+  z-index: 2;
+}
+
+.wishlist-btn.active {
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+}
+
+.wishlist-btn:hover {
+  background: rgba(255, 0, 0, 0.9);
 }
 </style>

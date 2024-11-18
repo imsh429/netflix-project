@@ -24,11 +24,16 @@
         <tbody>
         <tr v-for="movie in wishlistMovies" :key="movie.id">
           <td>
-            <img
-                :src="`https://image.tmdb.org/t/p/w200${movie.poster_path}`"
-                :alt="movie.title"
-                @click="removeFromWishlist(movie.id)"
-            />
+            <div class="poster-container">
+              <img
+                  :src="`https://image.tmdb.org/t/p/w200${movie.poster_path}`"
+                  :alt="movie.title"
+              />
+              <!-- 하트 버튼 추가 -->
+              <button class="wishlist-btn" @click="removeFromWishlist(movie.id)">
+                ❤️
+              </button>
+            </div>
           </td>
           <td>{{ movie.title }}</td>
           <td><button @click="removeFromWishlist(movie.id)">삭제</button></td>
@@ -44,9 +49,14 @@
             v-for="movie in wishlistMovies"
             :key="movie.id"
             class="movie-item"
-            @click="removeFromWishlist(movie.id)"
         >
-          <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
+          <div class="poster-container">
+            <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
+            <!-- 하트 버튼 추가 -->
+            <button class="wishlist-btn" @click="removeFromWishlist(movie.id)">
+              ❤️
+            </button>
+          </div>
           <p>{{ movie.title }}</p>
         </div>
       </div>
@@ -102,6 +112,27 @@ export default {
 
 .view-toggle button.active {
   font-weight: bold;
+}
+
+.poster-container {
+  position: relative;
+}
+
+.wishlist-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 1.2rem;
+}
+
+.wishlist-btn:hover {
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
 }
 
 .wishlist-table img,

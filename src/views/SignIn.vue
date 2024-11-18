@@ -21,8 +21,8 @@ import { login } from "@/services/AuthenticationService";
 export default {
   data() {
     return {
-      email: localStorage.getItem("savedEmail") || "", // 저장된 이메일 불러오기
-      password: localStorage.getItem("savedPassword") || "", // 저장된 비밀번호 불러오기 (보안상 권장 X)
+      email: localStorage.getItem("savedEmail") || "",
+      password: localStorage.getItem("savedPassword") || "",
       rememberMe: false,
     };
   },
@@ -30,17 +30,17 @@ export default {
     async handleLogin() {
       try {
         const message = await login(this.email, this.password);
-        alert(message); // 성공 메시지
+        alert(message);
         if (this.rememberMe) {
-          localStorage.setItem("savedEmail", this.email); // 이메일 저장
-          localStorage.setItem("savedPassword", this.password); // 비밀번호 저장 (보안상 권장 X)
+          localStorage.setItem("savedEmail", this.email);
+          localStorage.setItem("savedPassword", this.password);
         } else {
-          localStorage.removeItem("savedEmail"); // 체크 해제 시 이메일 제거
-          localStorage.removeItem("savedPassword"); // 체크 해제 시 비밀번호 제거
+          localStorage.removeItem("savedEmail");
+          localStorage.removeItem("savedPassword");
         }
-        this.$router.push("/"); // 로그인 성공 시 메인 페이지로 이동
+        this.$router.push("/");
       } catch (error) {
-        alert(error); // 실패 메시지
+        alert(error);
       }
     },
     switchToSignUp() {
