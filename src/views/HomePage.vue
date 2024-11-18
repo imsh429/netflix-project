@@ -112,9 +112,52 @@ export default {
 </script>
 
 <style scoped>
+.home-page {
+  background: linear-gradient(180deg, #1c1c1c, #111); /* 어두운 그라데이션 배경 */
+  color: white;
+  padding: 15px; /* 전체 패딩 줄이기 */
+}
+
+h2 {
+  font-family: 'Poppins', sans-serif; /* 세련된 폰트 */
+  font-size: 1.6rem; /* 글씨 크기 조금 더 줄이기 */
+  font-weight: 700; /* 폰트 두껍게 */
+  color: white;
+  margin-bottom: 10px; /* 제목 아래 간격 줄이기 */
+  text-align: left;
+}
+
+section {
+  margin-bottom: 20px; /* 섹션 간 간격 줄이기 */
+  padding: 10px; /* 섹션 내부 여백 축소 */
+  border-radius: 6px; /* 섹션 모서리 둥글기 */
+  background-color: rgba(255, 255, 255, 0.04); /* 투명 배경 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 가벼운 그림자 */
+}
+
 .loading-spinner {
-  text-align: center;
-  font-size: 1.2em;
-  color: gray;
+  text-align: left; /* 로딩 메시지 왼쪽 정렬 */
+  font-size: 1rem;
+  color: white;
+  margin: 10px 0; /* 로딩 메시지 간격 축소 */
+}
+
+.MovieRow {
+  margin-top: 5px; /* 영화 리스트 간격 축소 */
+}
+
+@media screen and (max-width: 768px) {
+  h2 {
+    font-size: 1.4rem; /* 모바일에서 글씨 크기 줄임 */
+    text-align: left;
+  }
+  section {
+    padding: 8px; /* 모바일에서 섹션 패딩 축소 */
+    margin-bottom: 15px; /* 모바일 섹션 간 간격 줄이기 */
+  }
 }
 </style>
+
+
+
+

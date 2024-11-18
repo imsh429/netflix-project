@@ -113,7 +113,6 @@ export default {
   background-size: cover;
   background-position: center;
   transition: background-image 0.8s ease-in-out;
-  margin-top: 60px;
 }
 
 .banner-content {
