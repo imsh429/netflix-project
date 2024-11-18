@@ -28,7 +28,7 @@
               :class="{ active: isInWishlist(movie.id) }"
               @click.stop="toggleWishlist(movie)"
           >
-            ❤️
+            <i :class="isInWishlist(movie.id) ? 'fas fa-star' : 'far fa-star'"></i>
           </button>
         </div>
         <p class="movie-title">{{ movie.title }}</p>
@@ -167,17 +167,19 @@ export default {
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 1rem;
-  padding: 5px;
+  font-size: 1.2rem;
+  padding: 6px;
   z-index: 2;
+  color: rgba(0, 0, 0, 0.6); /* 기본 비활성 상태 색상 */
 }
 
 .wishlist-btn.active {
-  background: rgba(255, 0, 0, 0.8);
+  background: rgba(255, 215, 0, 0.8);
   color: white;
 }
 
 .wishlist-btn:hover {
-  background: rgba(255, 0, 0, 0.9);
+  background: rgba(255, 215, 0, 1);
+  color: white;
 }
 </style>
