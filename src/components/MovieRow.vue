@@ -167,19 +167,22 @@ export default {
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1rem;
   padding: 6px;
   z-index: 2;
   color: rgba(0, 0, 0, 0.6); /* 기본 비활성 상태 색상 */
+  transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 전환 추가 */
 }
 
 .wishlist-btn.active {
   background: rgba(255, 215, 0, 0.8);
   color: white;
+  transition: background-color 0.3s ease, color 0.3s ease; /* 활성 상태에서도 동일 전환 효과 */
 }
 
 .wishlist-btn:hover {
   background: rgba(255, 215, 0, 1);
   color: white;
+  transition: background-color 0.3s ease, color 0.3s ease; /* 호버 상태에서도 부드럽게 전환 */
 }
 </style>
