@@ -83,6 +83,9 @@ export default {
 .popular-movies {
   padding: 2rem;
   position: relative;
+  background-color: #1e1e1e; /* 배경색 추가 */
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 선택 사항: 약간의 그림자 효과 */
 }
 
 /* View 전환 버튼 컨테이너 */
