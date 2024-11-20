@@ -15,7 +15,6 @@
 
     <!-- 필터링 및 카테고리 탐색 -->
     <div class="filter-section" v-if="!searchQuery">
-      <h2 class="filter-title">필터링 및 탐색</h2>
       <SearchFilter
           @applyFilters="applyFilters"
           @clearFilters="clearFilters"
@@ -201,6 +200,9 @@ export default {
   background-color: #1c1c1c;
   color: #fff;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* 각 섹션 간 간격 */
 }
 
 /* 상단 검색 바 */
@@ -215,10 +217,16 @@ export default {
 .search-bar input {
   width: 400px;
   padding: 0.75rem;
-  border: none;
+  border: 2px solid transparent; /* 기본 테두리 투명 */
   border-radius: 5px;
   font-size: 1rem;
   outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar input:focus {
+  border-color: #007bff; /* 포커스 시 테두리 색 */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 외곽선 */
 }
 
 .search-bar button {
@@ -229,11 +237,20 @@ export default {
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
+  transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
 .search-bar button i {
   font-size: 1.2rem;
+  transition: color 0.3s ease; /* 색상 전환 부드럽게 */
 }
+
+/* Hover 효과 추가 */
+.search-bar button:hover {
+  background-color: #0056b3; /* 더 어두운 파란색 */
+  transform: scale(1.1); /* 살짝 확대 */
+}
+
 
 /* 필터 섹션 */
 .filter-section {
