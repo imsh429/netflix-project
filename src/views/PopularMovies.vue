@@ -3,9 +3,15 @@
     <h1>인기 영화</h1>
 
     <!-- View 전환 버튼 -->
-    <div class="view-toggle">
-      <button @click="changeView('table')" :class="{ active: viewMode === 'table' }">Table View</button>
-      <button @click="changeView('infinite')" :class="{ active: viewMode === 'infinite' }">Infinite Scroll</button>
+    <div class="view-toggle-container">
+      <div class="view-toggle">
+        <button @click="changeView('table')" :class="{ active: viewMode === 'table' }">
+          <i class="fas fa-table"></i>
+        </button>
+        <button @click="changeView('infinite')" :class="{ active: viewMode === 'infinite' }">
+          <i class="fas fa-infinity"></i>
+        </button>
+      </div>
     </div>
 
     <!-- Table View 컴포넌트 -->
@@ -31,7 +37,7 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router'; // useRouter import 추가
+import { useRouter } from 'vue-router';
 import { useMovies } from '@/composables/useMovies.js';
 import TableView from "@/components/TableView.vue";
 import InfiniteScrollView from "@/components/InfiniteScrollView.vue";
@@ -43,20 +49,17 @@ export default {
     const { movies, loading, currentPage, hasMorePages, fetchMovies, loadMoreMovies } = useMovies();
 
     const viewMode = ref('table');
-
     const router = useRouter();
 
     const changeView = (view) => {
       viewMode.value = view;
-      fetchMovies(1, false); // view 변경 시 첫 페이지부터 다시 로딩
+      fetchMovies(1, false);
     };
 
     const goToMovieDetail = (movieId) => {
-      // 라우터를 통해 상세 페이지로 이동
       router.push({ name: "MovieDetail", params: { id: movieId } });
     };
 
-    // 컴포넌트가 마운트될 때 첫 페이지 로딩
     onMounted(() => {
       fetchMovies(currentPage.value, false);
     });
@@ -79,16 +82,41 @@ export default {
 <style scoped>
 .popular-movies {
   padding: 2rem;
+  position: relative;
 }
-.view-toggle {
+
+/* View 전환 버튼 컨테이너 */
+.view-toggle-container {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽으로 배치 */
   margin-bottom: 1rem;
 }
-.view-toggle button {
-  margin-right: 1rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
+
+.view-toggle {
+  display: flex;
+  gap: 0.5rem; /* 버튼 간 간격 */
 }
+
+.view-toggle button {
+  padding: 0.5rem;
+  font-size: 1.2rem; /* 아이콘 크기 */
+  border: none;
+  background-color: transparent;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
 .view-toggle button.active {
-  font-weight: bold;
+  color: #007bff; /* 활성 상태 색상 */
+}
+
+.view-toggle button:hover:not(.active) {
+  color: #555;
+  transform: scale(1.1); /* 호버 시 약간 확대 */
+}
+
+.view-toggle button:focus {
+  outline: none;
 }
 </style>
