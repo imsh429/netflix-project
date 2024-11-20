@@ -1,7 +1,5 @@
 <template>
   <div class="wishlist-movies">
-    <h1>위시리스트</h1>
-
     <div v-if="wishlistMovies.length === 0" class="empty-message">
       위시리스트에 영화가 없습니다.
     </div>
