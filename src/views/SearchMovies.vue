@@ -1,28 +1,35 @@
 <template>
   <div class="search-movies">
-    <h1>영화 검색</h1>
-
-    <!-- 영화 제목으로 검색하는 부분 -->
+    <!-- 상단 검색 바 -->
     <div class="search-bar">
       <input
           type="text"
           v-model="searchQuery"
-          placeholder="영화 제목을 입력하세요"
+          placeholder="제목으로 검색하세요"
           @keyup.enter="applySearch"
       />
-      <button @click="applySearch">검색</button>
+      <button @click="applySearch">
+        <i class="fas fa-search"></i>
+      </button>
     </div>
 
-    <!-- 필터링 및 정렬 옵션 (검색어가 없을 경우에만 사용) -->
-    <div v-if="!searchQuery">
+    <!-- 필터링 및 카테고리 탐색 -->
+    <div class="filter-section" v-if="!searchQuery">
+      <h2 class="filter-title">필터링 및 탐색</h2>
       <SearchFilter
           @applyFilters="applyFilters"
           @clearFilters="clearFilters"
       />
     </div>
 
-    <!-- 검색 결과 컴포넌트 (Table View) -->
+    <!-- 검색 결과 -->
+    <div v-if="loading" class="loading">
+      <div class="spinner"></div>
+      <p class="loading-text">검색 중...</p>
+    </div>
+
     <TableView
+        v-else
         :movies="movies"
         :currentPage="currentPage"
         :hasMorePages="hasMorePages"
@@ -33,11 +40,17 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import TableView from "@/components/TableView.vue";
 import SearchFilter from "@/components/SearchFilter.vue";
-import { fetchMoviesByQuery, fetchMoviesByGenre, fetchMoviesByRating, fetchPopularMovies, fetchMoviesByGenreAndRating } from "@/services/tmdbService.js";
+import {
+  fetchMoviesByQuery,
+  fetchMoviesByGenre,
+  fetchMoviesByRating,
+  fetchPopularMovies,
+  fetchMoviesByGenreAndRating,
+} from "@/services/tmdbService.js";
 
 export default {
   name: "SearchMovies",
@@ -47,19 +60,18 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const searchQuery = ref(""); // 영화 제목 검색어
-    const genre = ref(null); // 필터링할 장르
-    const rating = ref(null); // 필터링할 평점
-    const sortOption = ref(""); // 정렬 옵션 추가
+    const searchQuery = ref("");
+    const genre = ref(null);
+    const rating = ref(null);
+    const sortOption = ref("");
     const movies = ref([]);
     const loading = ref(false);
     const currentPage = ref(1);
     const hasMorePages = ref(true);
 
-    // 검색 기능
     const applySearch = async () => {
       if (!searchQuery.value) {
-        loadDefaultMovies(); // 검색어가 없을 경우 기본 영화 로드
+        loadDefaultMovies();
         return;
       }
       loading.value = true;
@@ -74,15 +86,13 @@ export default {
       }
     };
 
-    // 필터링 기능
     const applyFilters = async (filters) => {
       loading.value = true;
-      currentPage.value = 1; // 페이지를 1로 초기화
-      genre.value = filters.genre; // 필터 값을 업데이트
+      currentPage.value = 1;
+      genre.value = filters.genre;
       rating.value = filters.rating;
-      sortOption.value = filters.sort; // 정렬 옵션 추가
+      sortOption.value = filters.sort;
       try {
-        // 장르와 평점에 따라 영화 필터링
         if (genre.value && rating.value) {
           movies.value = await fetchMoviesByGenreAndRating(genre.value, rating.value, currentPage.value);
         } else if (genre.value) {
@@ -93,7 +103,6 @@ export default {
           movies.value = await fetchPopularMovies(currentPage.value);
         }
 
-        // 정렬 옵션이 있을 경우 정렬 적용
         if (sortOption.value) {
           sortMovies(sortOption.value);
         }
@@ -106,7 +115,6 @@ export default {
       }
     };
 
-    // 정렬 기능
     const sortMovies = (sort) => {
       if (sort === "popularity") {
         movies.value.sort((a, b) => b.popularity - a.popularity);
@@ -115,17 +123,15 @@ export default {
       }
     };
 
-    // 필터 초기화
     const clearFilters = async () => {
       genre.value = null;
       rating.value = null;
-      sortOption.value = ""; // 정렬 옵션 초기화
+      sortOption.value = "";
       searchQuery.value = "";
       currentPage.value = 1;
       await loadDefaultMovies();
     };
 
-    // 기본 영화 로드
     const loadDefaultMovies = async () => {
       loading.value = true;
       try {
@@ -138,17 +144,14 @@ export default {
       }
     };
 
-    // 페이지 변경 시 필터를 유지하며 새로운 영화 데이터를 가져옴
     const fetchMovies = async (page) => {
       loading.value = true;
       currentPage.value = page;
       try {
         if (searchQuery.value) {
-          // 검색어가 있을 경우 해당 검색어로 페이지 변경
           const additionalMovies = await fetchMoviesByQuery(searchQuery.value, page);
           movies.value = additionalMovies;
         } else if (genre.value || rating.value) {
-          // 필터가 적용된 경우 해당 필터와 함께 페이지 변경
           if (genre.value && rating.value) {
             movies.value = await fetchMoviesByGenreAndRating(genre.value, rating.value, page);
           } else if (genre.value) {
@@ -157,11 +160,9 @@ export default {
             movies.value = await fetchMoviesByRating(rating.value, page);
           }
         } else {
-          // 필터나 검색어가 없는 경우 기본 인기 영화 불러오기
           movies.value = await fetchPopularMovies(page);
         }
 
-        // 페이지 이동 시 정렬 옵션이 있을 경우 정렬 적용
         if (sortOption.value) {
           sortMovies(sortOption.value);
         }
@@ -174,7 +175,6 @@ export default {
       }
     };
 
-    // 영화 상세 페이지로 이동
     const goToMovieDetail = (movieId) => {
       router.push({ name: "MovieDetail", params: { id: movieId } });
     };
@@ -198,21 +198,85 @@ export default {
 <style scoped>
 .search-movies {
   padding: 2rem;
+  background-color: #1c1c1c;
+  color: #fff;
+  min-height: 100vh;
 }
+
+/* 상단 검색 바 */
 .search-bar {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
-.view-toggle {
-  margin-bottom: 1rem;
+
+.search-bar input {
+  width: 400px;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  outline: none;
 }
-.view-toggle button {
-  margin-right: 1rem;
-  padding: 0.5rem 1rem;
+
+.search-bar button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 1rem;
 }
-.view-toggle button.active {
-  font-weight: bold;
+
+.search-bar button i {
+  font-size: 1.2rem;
+}
+
+/* 필터 섹션 */
+.filter-section {
+  padding: 1rem;
+  background-color: #2b2b2b;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
+.filter-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* 로딩 스피너 */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  color: #ccc;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
