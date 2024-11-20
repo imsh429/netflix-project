@@ -152,19 +152,25 @@ export default {
 .pagination button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
+  font-family: 'Roboto', sans-serif; /* 현대적인 폰트 추가 */
+  background-color: #333333; /* 어두운 배경 */
+  color: #ffffff; /* 흰색 텍스트 */
+  border: 1px solid #444444; /* 다크 테마에 맞는 경계 */
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* 부드러운 전환 추가 */
 }
 
 .pagination button:hover:not(:disabled) {
-  background-color: #f0f0f0;
+  background-color: #555555; /* 호버 시 약간 밝은 회색 */
+  transform: scale(1.05); /* 호버 시 살짝 확대 */
 }
 
 .pagination button:disabled {
-  background-color: #e0e0e0;
+  background-color: #222222; /* 비활성화 상태 배경 */
+  color: #666666; /* 비활성화 상태 텍스트 */
+  border: 1px solid #333333; /* 비활성화 경계 색상 */
   cursor: not-allowed;
 }
+
 </style>
