@@ -92,7 +92,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 1rem 1rem;
   background-color: rgba(0, 0, 0, 0.88);
   transition: background-color 0.3s ease;
   color: white;
@@ -179,16 +179,29 @@ header.scrolled:hover {
 }
 
 button {
-  background: none;
-  border: 1px solid white;
-  color: white;
-  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.1); /* 버튼 기본 배경 투명한 흰색 */
+  border: 2px solid white; /* 흰색 테두리 */
+  color: white; /* 기본 텍스트 색상 흰색 */
+  padding: 0.5rem 1rem; /* 버튼 내부 여백 */
+  border-radius: 20px; /* 둥근 버튼 스타일 */
+  font-size: 1rem; /* 텍스트 크기 */
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-  background: white;
-  color: black;
+  background-color: #007bff; /* Hover 시 파란색 */
+  color: white; /* 텍스트 색상 유지 */
+  transform: scale(1.05); /* 살짝 확대 효과 */
 }
+
+button:focus {
+  outline: none; /* 포커스 시 기본 아웃라인 제거 */
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.8); /* 파란색 그림자 효과 */
+}
+
+button:active {
+  transform: scale(0.95); /* 클릭 시 살짝 눌리는 효과 */
+}
+
 </style>
