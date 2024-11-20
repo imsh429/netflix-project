@@ -1,7 +1,5 @@
 <template>
   <div class="popular-movies">
-    <h1>인기 영화</h1>
-
     <!-- View 전환 버튼 -->
     <div class="view-toggle-container">
       <div class="view-toggle">
