@@ -76,10 +76,13 @@ export default {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
     toggleWishlist(movie) {
+      console.log("Toggling wishlist for movie: ", movie); // movie 객체 확인
       // 위시리스트 추가/삭제
       if (isMovieInWishlist(movie.id)) {
+        console.log("Removing from wishlist: ", movie.id);
         removeMovieFromWishlist(movie.id);
       } else {
+        console.log("Adding to wishlist: ", movie);
         addMovieToWishlist(movie);
       }
       this.$forceUpdate(); // 위시리스트 상태를 즉시 반영
