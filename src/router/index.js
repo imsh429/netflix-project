@@ -4,8 +4,7 @@ import PopularMovies from '@/views/PopularMovies.vue';
 import SearchMovies from '@/views/SearchMovies.vue';
 import WishlistMovies from '@/views/WishlistMovies.vue';
 import MovieDetail from '@/views/MovieDetail.vue';
-import SignIn from '@/views/SignIn.vue';
-import SignUp from '@/views/SignUp.vue';
+import AuthPage from '@/views/Auth.vue';
 import { isLoggedIn } from "@/services/AuthenticationService.js";
 
 const routes = [
@@ -38,12 +37,12 @@ const routes = [
     {
         path: '/signin',
         name: 'SignIn',
-        component: SignIn
+        component: AuthPage
     },
     {
         path: '/signup',
         name: 'SignUp',
-        component: SignUp
+        component: AuthPage
     },
 ];
 
