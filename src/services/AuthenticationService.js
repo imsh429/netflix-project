@@ -1,4 +1,3 @@
-// src/services/AuthenticationService.js
 import { tryLogin, tryRegister } from "../Authentication.js";
 
 const login = async (email, password) => {
@@ -6,9 +5,9 @@ const login = async (email, password) => {
         tryLogin(
             email,
             password,
-            (token) => {
-                localStorage.setItem("TMDb-Key", token);
-                localStorage.setItem("userId", email); // 로그인 성공 시 userId 저장
+            (tmdbKey) => {
+                // 로그인 성공 시 입력한 비밀번호를 TMDb-Key로 저장
+                localStorage.setItem("TMDb-Key", tmdbKey);
                 resolve("로그인 성공");
             },
             () => reject("로그인 실패: 잘못된 아이디 또는 비밀번호입니다.")
@@ -27,13 +26,10 @@ const register = async (email, password) => {
     });
 };
 
-// 로그인 상태 확인 함수
 const isLoggedIn = () => !!localStorage.getItem("TMDb-Key");
 
-// 로그아웃 함수 추가
 const logout = () => {
-    localStorage.removeItem("TMDb-Key");
-    localStorage.removeItem("userId");
+    localStorage.removeItem("TMDb-Key"); // 세션 키만 삭제
 };
 
 export { login, register, isLoggedIn, logout };

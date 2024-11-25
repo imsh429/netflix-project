@@ -69,7 +69,6 @@
 
 <script>
 import { login, register } from "@/services/AuthenticationService.js";
-import { setApiKey } from "@/utils/storage.js";
 
 export default {
   name: "AuthPage",
@@ -98,27 +97,23 @@ export default {
         }
 
         try {
-          const response = await register(this.email, this.password);
-          setApiKey(response);
+          await register(this.email, this.password);
           alert("회원가입 성공!");
           this.$router.push("/signin");
         } catch (error) {
-          this.errorMessage = error.message || "회원가입에 실패했습니다.";
+          this.errorMessage = error || "회원가입에 실패했습니다.";
         }
       } else {
         try {
-          const message = await login(this.email, this.password);
-          alert(message);
+          await login(this.email, this.password);
           if (this.rememberMe) {
             localStorage.setItem("savedEmail", this.email);
             localStorage.setItem("savedPassword", this.password);
-          } else {
-            localStorage.removeItem("savedEmail");
-            localStorage.removeItem("savedPassword");
           }
+          alert("로그인 성공!");
           this.$router.push("/");
         } catch (error) {
-          this.errorMessage = error.message || "로그인에 실패했습니다.";
+          this.errorMessage = error || "로그인에 실패했습니다.";
         }
       }
     },
@@ -126,6 +121,8 @@ export default {
       this.isSignUp = !this.isSignUp;
       this.$router.push(this.isSignUp ? "/signup" : "/signin");
     },
+  },
+
     validateEmail() {
       const emailPattern =
           /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -133,7 +130,6 @@ export default {
         this.errorMessage = "유효한 이메일 형식이 아닙니다.";
       }
     },
-  },
 };
 </script>
 
