@@ -42,3 +42,28 @@ export function getApiKey() {
 export function removeApiKey() {
     localStorage.removeItem("TMDb-Key");
 }
+
+// 최근 검색어 가져오기
+export function getRecentSearches() {
+    return JSON.parse(localStorage.getItem("recentSearches")) || [];
+}
+
+// 최근 검색어 저장하기
+export function addRecentSearch(query) {
+    if (!query.trim()) return;
+    const searches = getRecentSearches();
+    // 중복 제거 및 최대 10개 제한
+    const updatedSearches = [query, ...searches.filter(search => search !== query)].slice(0, 10);
+    localStorage.setItem("recentSearches", JSON.stringify(updatedSearches));
+}
+
+// 특정 검색어 삭제
+export function removeRecentSearch(query) {
+    const searches = getRecentSearches().filter(search => search !== query);
+    localStorage.setItem("recentSearches", JSON.stringify(searches));
+}
+
+// 최근 검색어 삭제
+export function clearRecentSearches() {
+    localStorage.removeItem("recentSearches");
+}
