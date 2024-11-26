@@ -13,6 +13,20 @@
       </button>
     </div>
 
+    <!-- 최근 검색어 -->
+    <div class="recent-searches" v-if="recentSearches.length">
+      <h4>최근 검색어</h4>
+      <ul>
+        <li v-for="search in recentSearches" :key="search">
+          <span @click="selectRecentSearch(search)" class="search-text">
+            {{ search }}
+          </span>
+          <button @click="removeSearch(search)" class="remove-btn">❌</button>
+        </li>
+      </ul>
+      <button class="clear-btn" @click="clearSearchHistory">전체 기록 삭제</button>
+    </div>
+
     <!-- 필터링 및 카테고리 탐색 -->
     <div class="filter-section" v-if="!searchQuery">
       <SearchFilter
@@ -50,6 +64,7 @@ import {
   fetchPopularMovies,
   fetchMoviesByGenreAndRating,
 } from "@/services/tmdbService.js";
+import { getRecentSearches, addRecentSearch, removeRecentSearch, clearRecentSearches } from "@/utils/storage";
 
 export default {
   name: "SearchMovies",
@@ -67,12 +82,18 @@ export default {
     const loading = ref(false);
     const currentPage = ref(1);
     const hasMorePages = ref(true);
+    const recentSearches = ref(getRecentSearches());
 
     const applySearch = async () => {
-      if (!searchQuery.value) {
+      if (!searchQuery.value.trim()) {
         loadDefaultMovies();
         return;
       }
+
+      // 검색어 저장
+      addRecentSearch(searchQuery.value);
+      recentSearches.value = getRecentSearches(); // UI 업데이트
+
       loading.value = true;
       currentPage.value = 1;
       try {
@@ -175,7 +196,22 @@ export default {
     };
 
     const goToMovieDetail = (movieId) => {
-      router.push({ name: "MovieDetail", params: { id: movieId } });
+      router.push({name: "MovieDetail", params: {id: movieId}});
+    };
+
+    const selectRecentSearch = (search) => {
+      searchQuery.value = search;
+      applySearch();
+    };
+
+    const clearSearchHistory = () => {
+      clearRecentSearches();
+      recentSearches.value = [];
+    };
+
+    const removeSearch = (search) => {
+      removeRecentSearch(search);
+      recentSearches.value = getRecentSearches(); // UI 업데이트
     };
 
     return {
@@ -184,11 +220,15 @@ export default {
       loading,
       currentPage,
       hasMorePages,
+      recentSearches,
       applySearch,
       applyFilters,
       clearFilters,
       fetchMovies,
       goToMovieDetail,
+      selectRecentSearch,
+      removeSearch,
+      clearSearchHistory,
     };
   },
 };
@@ -202,10 +242,9 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* 각 섹션 간 간격 */
+  gap: 1rem;
 }
 
-/* 상단 검색 바 */
 .search-bar {
   display: flex;
   justify-content: center;
@@ -217,7 +256,7 @@ export default {
 .search-bar input {
   width: 400px;
   padding: 0.75rem;
-  border: 2px solid transparent; /* 기본 테두리 투명 */
+  border: 2px solid transparent;
   border-radius: 5px;
   font-size: 1rem;
   outline: none;
@@ -225,8 +264,8 @@ export default {
 }
 
 .search-bar input:focus {
-  border-color: #007bff; /* 포커스 시 테두리 색 */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 외곽선 */
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .search-bar button {
@@ -242,58 +281,90 @@ export default {
 
 .search-bar button i {
   font-size: 1.2rem;
-  transition: color 0.3s ease; /* 색상 전환 부드럽게 */
 }
 
-/* Hover 효과 추가 */
 .search-bar button:hover {
-  background-color: #0056b3; /* 더 어두운 파란색 */
-  transform: scale(1.1); /* 살짝 확대 */
+  background-color: #0056b3;
+  transform: scale(1.1);
 }
 
-
-/* 필터 섹션 */
-.filter-section {
-  padding: 1rem;
-  background-color: #2b2b2b;
-  border-radius: 10px;
-  margin-bottom: 2rem;
-}
-
-.filter-title {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-/* 로딩 스피너 */
-.loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50vh;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(255, 255, 255, 0.2);
-  border-top: 4px solid white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-.loading-text {
+.recent-searches {
   margin-top: 1rem;
-  color: #ccc;
+  padding: 1rem;
+  background-color: #2e2e2e;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.recent-searches h4 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  color: #ffcc00;
+}
+
+.recent-searches ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-searches li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #444;
+  transition: background-color 0.3s ease;
+}
+
+.recent-searches li:last-child {
+  border-bottom: none;
+}
+
+.recent-searches li:hover {
+  background-color: #3d3d3d;
+  border-radius: 5px;
+}
+
+.search-text {
+  cursor: pointer;
+  color: white;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.search-text:hover {
+  color: #007bff;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.remove-btn:hover {
+  color: #ff0000;
+  transform: scale(1.1);
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+  margin-top: 1rem;
+  text-align: center;
+  display: block;
+  font-size: 0.9rem;
+}
+
+.clear-btn:hover {
+  color: #ff0000;
+  text-decoration: underline;
 }
 </style>
+
