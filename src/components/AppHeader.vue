@@ -187,6 +187,12 @@ header.scrolled:hover {
 .user-icon-wrapper i {
   font-size: 1.5rem;
   color: white;
+  transition: transform 0.3s ease, font-size 0.3s ease;
+}
+
+.user-icon-wrapper:hover i {
+  font-size: 2rem; /* 아이콘 크기 증가 */
+  transform: scale(1.2); /* 추가 확대 효과 */
 }
 
 .user-email {

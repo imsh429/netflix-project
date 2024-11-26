@@ -4,8 +4,8 @@
       <h1 @click="goToDetailPage" class="title">{{ currentMovie.title }}</h1>
       <p class="overview">{{ currentMovie.overview }}</p>
       <div class="button-group">
-        <button class="play-btn title-btn" @click="playTrailer">재생</button>
-        <button class="info-btn title-btn" @click="goToDetailPage">상세 정보</button>
+        <button class="play-btn title-btn" @click="playTrailer"><i class="fas fa-play"></i> 재생</button>
+        <button class="info-btn title-btn" @click="goToDetailPage"><i class="fas fa-info-circle"></i>상세 정보</button>
       </div>
     </div>
     <div class="dots">
@@ -52,6 +52,7 @@ export default {
       showTrailerModal: false,
       trailerUrl: null,
       slideInterval: null,
+      isLoading: true,
     };
   },
   computed: {
@@ -97,6 +98,10 @@ export default {
     },
   },
   mounted() {
+    if (this.movies.length > 0) {
+      this.isLoading = false; // 영화 데이터가 존재하면 로딩 종료
+      this.startAutoSlide();
+    }
     this.startAutoSlide();
   },
   beforeUnmount() {
@@ -143,21 +148,58 @@ export default {
 }
 
 .title-btn {
-  padding: 10px 20px;
+  padding: 12px 24px; /* 버튼 크기 */
   border: none;
-  border-radius: 5px;
+  border-radius: 25px; /* 둥근 모서리 */
   cursor: pointer;
+  font-size: 1rem; /* 글씨 크기 */
+  font-weight: bold; /* 글씨 굵기 */
+  transition: all 0.2s ease-in-out; /* 더 빠른 반응 시간 */
+  display: flex; /* 아이콘과 텍스트를 수평 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  gap: 8px; /* 아이콘과 텍스트 간격 */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 버튼 그림자 */
+}
+
+.title-btn:active {
+  transform: scale(0.95); /* 클릭 시 살짝 축소 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* 그림자 줄이기 */
 }
 
 .play-btn {
-  background-color: #e50914;
+  background-color: #007bff; /* 기본 파란색 */
   color: white;
 }
 
-.info-btn {
-  background-color: rgba(255, 255, 255, 0.8);
-  color: black;
+.play-btn:hover {
+  background-color: #0056b3; /* 어두운 파란색 */
+  transform: scale(1.05); /* 살짝 확대 */
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
 }
+
+.play-btn:active {
+  transform: scale(0.70); /* 클릭 시 살짝 축소 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* 그림자 줄이기 */
+}
+
+
+.info-btn {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #007bff; /* 파란색 글씨 */
+}
+
+.info-btn:hover {
+  background-color: #007bff; /* 파란색으로 변경 */
+  color: white; /* 글씨 색상 변경 */
+  transform: scale(1.05); /* 살짝 확대 */
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
+}
+
+.info-btn:active {
+  transform: scale(0.70); /* 클릭 시 살짝 축소 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* 그림자 줄이기 */
+}
+
 
 .dots {
   position: absolute;
@@ -181,6 +223,19 @@ export default {
 .dot.active {
   background-color: white;
   transform: scale(1.2);
+}
+
+.dot:hover {
+  animation: pulse 0.6s infinite; /* 부드럽게 확장 후 축소 */
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
 }
 
 .modal-overlay {
