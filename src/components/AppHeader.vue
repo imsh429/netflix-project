@@ -31,8 +31,8 @@
         <i class="fas fa-user"></i>
         <span v-if="isLoggedIn" class="user-email">{{ userId }}</span>
       </div>
-      <button @click="handleAuthAction">
-        {{ isLoggedIn ? '로그아웃' : '로그인' }}
+      <button @click="handleAuthAction" class="auth-button">
+        {{ isLoggedIn ? 'Logout' : 'Login' }}
       </button>
     </div>
   </header>
@@ -210,30 +210,51 @@ header.scrolled:hover {
   visibility: visible;
 }
 
-button {
-  background-color: rgba(255, 255, 255, 0.1); /* 버튼 기본 배경 투명한 흰색 */
-  border: 2px solid white; /* 흰색 테두리 */
-  color: white; /* 기본 텍스트 색상 흰색 */
-  padding: 0.5rem 1rem; /* 버튼 내부 여백 */
-  border-radius: 20px; /* 둥근 버튼 스타일 */
-  font-size: 1rem; /* 텍스트 크기 */
+.auth-button {
+  background: linear-gradient(135deg, #6a11cb, #2575fc); /* 기본 색상 그라데이션 */
+  color: white;
+  font-size: 0.8rem; /* 글꼴 크기 축소 */
+  font-weight: bold;
+  padding: 0.4rem 1rem; /* 패딩 줄이기 */
+  border: none;
+  border-radius: 20px; /* 작고 둥근 버튼 */
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 크기 축소 */
+  position: relative;
+  overflow: hidden;
 }
 
-button:hover {
-  background-color: #007bff; /* Hover 시 파란색 */
-  color: white; /* 텍스트 색상 유지 */
-  transform: scale(1.05); /* 살짝 확대 효과 */
+.auth-button:hover {
+  background: linear-gradient(135deg, #2575fc, #6a11cb); /* 호버 시 색상 반전 */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15); /* 호버 시 약간의 그림자 증가 */
+  transform: scale(1.05); /* 버튼 확대 효과 */
 }
 
-button:focus {
-  outline: none; /* 포커스 시 기본 아웃라인 제거 */
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.8); /* 파란색 그림자 효과 */
+.auth-button:active {
+  transform: scale(0.95); /* 클릭 시 축소 효과 */
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2); /* 클릭 시 그림자 감소 */
 }
 
-button:active {
-  transform: scale(0.95); /* 클릭 시 살짝 눌리는 효과 */
+.auth-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3); /* 클릭 시 원형 퍼짐 효과 */
+  border-radius: 50%;
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.6s ease;
+  opacity: 0;
 }
+
+.auth-button:active::before {
+  width: 150%; /* 퍼짐 크기 축소 */
+  height: 150%; /* 퍼짐 크기 축소 */
+  opacity: 1; /* 클릭 시 애니메이션 발생 */
+}
+
 
 </style>
