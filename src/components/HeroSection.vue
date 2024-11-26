@@ -1,11 +1,11 @@
 <template>
   <section v-if="currentMovie" class="hero-slider" :style="{ backgroundImage: `url(${backdropUrl})` }">
     <div class="banner-content">
-      <h1 @click="goToDetailPage" class="title">{{ currentMovie.title }}</h1>
+      <h1 class="title">{{ currentMovie.title }}</h1>
       <p class="overview">{{ currentMovie.overview }}</p>
       <div class="button-group">
         <button class="play-btn title-btn" @click="playTrailer"><i class="fas fa-play"></i> 재생</button>
-        <button class="info-btn title-btn" @click="goToDetailPage"><i class="fas fa-info-circle"></i>상세 정보</button>
+        <button class="info-btn title-btn" @click="openDetailModal(currentMovie)"><i class="fas fa-info-circle"></i>상세 정보</button>
       </div>
     </div>
     <div class="dots">
@@ -17,6 +17,9 @@
           @click="goToSlide(index)">
       </span>
     </div>
+    <ReusableModal :visible="showDetailModal" @close="closeDetailModal">
+      <MovieDetail v-if="selectedMovie" :id="selectedMovie.id" />
+    </ReusableModal>
     <div v-if="showTrailerModal" class="modal-overlay" @click="closeTrailer">
       <div class="modal-content" @click.stop>
         <iframe
@@ -36,9 +39,15 @@
 
 <script>
 import {fetchMovieTrailer} from "@/services/tmdbService.js";
+import ReusableModal from "@/components/ReusableModal.vue";
+import MovieDetail from "@/views/MovieDetail.vue";
 
 export default {
   name: "HeroSection",
+  components: {
+    ReusableModal,
+    MovieDetail,
+  },
   props: {
     movies: {
       type: Array,
@@ -53,6 +62,8 @@ export default {
       trailerUrl: null,
       slideInterval: null,
       isLoading: true,
+      showDetailModal: false, // 상세정보 모달 표시 여부
+      selectedMovie: null,    // 선택된 영화 데이터
     };
   },
   computed: {
@@ -79,10 +90,13 @@ export default {
       this.showTrailerModal = false;
       this.trailerUrl = null;
     },
-    goToDetailPage() {
-      if (this.currentMovie) {
-        this.$router.push({name: 'MovieDetail', params: {id: this.currentMovie.id}});
-      }
+    openDetailModal(movie) {
+      this.selectedMovie = movie; // 선택된 영화 데이터 설정
+      this.showDetailModal = true; // 모달 표시
+    },
+    closeDetailModal() {
+      this.showDetailModal = false; // 모달 닫기
+      this.selectedMovie = null;   // 선택된 영화 초기화
     },
     goToSlide(index) {
       this.currentSlide = index;
@@ -155,9 +169,6 @@ export default {
   font-size: 1rem; /* 글씨 크기 */
   font-weight: bold; /* 글씨 굵기 */
   transition: all 0.2s ease-in-out; /* 더 빠른 반응 시간 */
-  display: flex; /* 아이콘과 텍스트를 수평 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
-  gap: 8px; /* 아이콘과 텍스트 간격 */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 버튼 그림자 */
 }
 
