@@ -67,3 +67,18 @@ export function removeRecentSearch(query) {
 export function clearRecentSearches() {
     localStorage.removeItem("recentSearches");
 }
+
+// 로그인 상태 저장
+export function setLoginStatus(isLoggedIn) {
+    localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn));
+}
+
+// 로그인 상태 가져오기
+export function getLoginStatus() {
+    return JSON.parse(localStorage.getItem("isLoggedIn")) || false;
+}
+
+// 로그아웃 시 로그인 상태 제거
+export function clearLoginStatus() {
+    localStorage.removeItem("isLoggedIn");
+}

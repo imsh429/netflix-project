@@ -8,6 +8,7 @@ const login = async (email, password) => {
             (tmdbKey) => {
                 // 로그인 성공 시 입력한 비밀번호를 TMDb-Key로 저장
                 localStorage.setItem("TMDb-Key", tmdbKey);
+                localStorage.setItem("userId", email);
                 resolve("로그인 성공");
             },
             () => reject("로그인 실패: 잘못된 아이디 또는 비밀번호입니다.")
@@ -29,7 +30,8 @@ const register = async (email, password) => {
 const isLoggedIn = () => !!localStorage.getItem("TMDb-Key");
 
 const logout = () => {
-    localStorage.removeItem("TMDb-Key"); // 세션 키만 삭제
+    localStorage.removeItem("TMDb-Key");
+    localStorage.removeItem("userId");
 };
 
 export { login, register, isLoggedIn, logout };

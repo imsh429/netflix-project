@@ -27,7 +27,10 @@
 
     <!-- 유저 정보 -->
     <div class="user-info">
-      <span v-if="isLoggedIn">{{ userId }}</span>
+      <div class="user-icon-wrapper">
+        <i class="fas fa-user"></i>
+        <span v-if="isLoggedIn" class="user-email">{{ userId }}</span>
+      </div>
       <button @click="handleAuthAction">
         {{ isLoggedIn ? '로그아웃' : '로그인' }}
       </button>
@@ -61,26 +64,23 @@ export default {
         this.$router.push("/signin");
       }
     },
+    updateUserInfo() {
+      this.isLoggedIn = checkLoginStatus(); // 로그인 상태 확인
+      this.userId = localStorage.getItem("userId") || "사용자"; // userId 가져오기
+    },
   },
   watch: {
-    isLoggedIn(newStatus) {
-      if (newStatus) {
-        this.userId = localStorage.getItem("userId") || "사용자";
-      } else {
-        this.userId = "";
-      }
-    }
+    isLoggedIn() {
+      this.updateUserInfo(); // 로그인 상태가 변경되면 userId 업데이트
+    },
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
-    this.isLoggedIn = checkLoginStatus();
-    if (this.isLoggedIn) {
-      this.userId = localStorage.getItem("userId") || "사용자";
-    }
+    this.updateUserInfo(); // 컴포넌트 초기화 시 userId 업데이트
   },
   unmounted() {
     window.removeEventListener("scroll", this.handleScroll);
-  }
+  },
 };
 </script>
 
@@ -176,6 +176,38 @@ header.scrolled:hover {
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.user-icon-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.user-icon-wrapper i {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.user-email {
+  position: absolute;
+  top: 30px; /* 아이콘 위에 이메일 표시 */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.user-icon-wrapper:hover .user-email {
+  opacity: 1;
+  visibility: visible;
 }
 
 button {
