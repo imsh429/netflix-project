@@ -79,7 +79,6 @@ export default {
 
 <style scoped>
 .popular-movies {
-  padding: 2rem;
   position: relative;
   background-color: #1e1e1e; /* 배경색 추가 */
   color: #fff;
@@ -90,7 +89,6 @@ export default {
 .view-toggle-container {
   display: flex;
   justify-content: flex-end; /* 오른쪽으로 배치 */
-  margin-bottom: 1rem;
 }
 
 .view-toggle {
