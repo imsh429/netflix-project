@@ -34,13 +34,23 @@
       <i class="fas fa-arrow-up"></i>
     </button>
   </div>
+
+  <ReusableModal :visible="showDetailModal" @close="closeDetailModal">
+    <MovieDetail v-if="selectedMovie" :id="selectedMovie.id" />
+  </ReusableModal>
 </template>
 
 <script>
 import { addMovieToWishlist, removeMovieFromWishlist, isMovieInWishlist } from "@/utils/storage.js";
+import ReusableModal from "@/components/ReusableModal.vue";
+import MovieDetail from "@/views/MovieDetail.vue";
 
 export default {
   name: "InfiniteScrollView",
+  components: {
+    ReusableModal,
+    MovieDetail,
+  },
   props: {
     movies: Array,
     loading: Boolean,
@@ -48,6 +58,8 @@ export default {
   data() {
     return {
       showTopButton: false, // Top 버튼 표시 여부
+      showDetailModal: false, // 상세정보 모달 표시 여부
+      selectedMovie: null, // 선택된 영화 데이터
     };
   },
   mounted() {
@@ -69,7 +81,15 @@ export default {
       this.showTopButton = window.scrollY > 400;
     },
     selectMovie(movieId) {
-      this.$emit("movie-selected", movieId);
+      const selected = this.movies.find((movie) => movie.id === movieId);
+      if (selected) {
+        this.selectedMovie = selected; // 선택된 영화 데이터 설정
+        this.showDetailModal = true;  // 모달 표시
+      }
+    },
+    closeDetailModal() {
+      this.showDetailModal = false; // 모달 닫기
+      this.selectedMovie = null;   // 선택된 영화 초기화
     },
     scrollToTop() {
       // 페이지 맨 위로 부드럽게 스크롤

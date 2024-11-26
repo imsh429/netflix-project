@@ -34,13 +34,28 @@
       </button>
     </div>
   </div>
+  <ReusableModal :visible="showDetailModal" @close="closeDetailModal">
+    <MovieDetail v-if="selectedMovie" :id="selectedMovie.id" />
+  </ReusableModal>
 </template>
 
 <script>
 import { addMovieToWishlist, removeMovieFromWishlist, isMovieInWishlist } from "@/utils/storage.js";
+import MovieDetail from "@/views/MovieDetail.vue";
+import ReusableModal from "@/components/ReusableModal.vue";
 
 export default {
   name: "TableView",
+  components: {
+    MovieDetail,
+    ReusableModal,
+  },
+  data() {
+    return {
+      showDetailModal: false, // 상세정보 모달 표시 여부
+      selectedMovie: null,    // 선택된 영화 데이터
+    };
+  },
   props: {
     movies: Array,
     currentPage: Number,
@@ -48,8 +63,15 @@ export default {
   },
   methods: {
     selectMovie(movieId) {
-      // 부모 컴포넌트로 movie-selected 이벤트를 전달
-      this.$emit("movie-selected", movieId);
+      const selected = this.movies.find((movie) => movie.id === movieId);
+      if (selected) {
+        this.selectedMovie = selected; // 선택된 영화 데이터 설정
+        this.showDetailModal = true;  // 모달 표시
+      }
+    },
+    closeDetailModal() {
+      this.showDetailModal = false; // 모달 닫기
+      this.selectedMovie = null;   // 선택된 영화 초기화
     },
     toggleWishlist(movie) {
       // 위시리스트 추가/삭제
