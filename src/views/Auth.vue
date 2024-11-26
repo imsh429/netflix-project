@@ -79,7 +79,7 @@ export default {
       password: localStorage.getItem("savedPassword") || "",
       confirmPassword: "",
       agreedTerms: false,
-      rememberMe: false,
+      rememberMe: localStorage.getItem("keepLogin") === "true", // keepLogin 상태 반영
       errorMessage: null,
     };
   },
@@ -109,6 +109,12 @@ export default {
           if (this.rememberMe) {
             localStorage.setItem("savedEmail", this.email);
             localStorage.setItem("savedPassword", this.password);
+            localStorage.setItem("keepLogin", "true");
+          } else {
+            // Remember me가 선택되지 않은 경우, 관련 정보 삭제
+            localStorage.removeItem("savedEmail");
+            localStorage.removeItem("savedPassword");
+            localStorage.setItem("keepLogin", "false");
           }
           alert("로그인 성공!");
           this.$router.push("/");
