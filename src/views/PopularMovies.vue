@@ -88,9 +88,9 @@ html, body {
   position: relative;
   min-height: 100vh; /* 화면의 전체 높이를 채우도록 설정 */
   background-color: #1e1e1e; /* 배경색 추가 */
-  background-size: cover; /* 배경 이미지가 컨테이너를 덮도록 설정 */
-  background-position: center center; /* 배경 이미지 중앙 정렬 */
-  background-attachment: fixed; /* 스크롤 시 배경 고정 */
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding in width calculation */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
   color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 선택 사항: 약간의 그림자 효과 */
 }
@@ -128,6 +128,19 @@ html, body {
 .view-toggle button:focus {
   outline: none;
 }
+@media (max-width: 768px) and (orientation: landscape) {
+  .popular-movies {
+    width: 100vw; /* Full viewport width */
+    padding: 0.5rem; /* Minimal padding */
+    margin: 0; /* Remove any margin */
+  }
+
+  .view-toggle-container {
+    width: 100%; /* Full width */
+    padding: 0.5rem; /* Minimal padding */
+  }
+}
+
 
 @media (max-width: 480px) {
   .view-toggle-container {

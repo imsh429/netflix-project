@@ -38,6 +38,8 @@ export default {
   color: white;
   background-color: #1e1e1e;
   min-height: 100vh;
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 /* 빈 상태 메시지 */
@@ -46,5 +48,18 @@ export default {
   font-size: 1.5rem;
   margin-top: 2rem;
   color: #aaa;
+}
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .wishlist-movies {
+    padding: 1rem; /* Reduce padding */
+    min-height: 100vh;
+    width: 100vw; /* Full viewport width */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+  }
+
+  .empty-message {
+    font-size: 1.2rem; /* Slightly smaller font */
+    margin-top: 1rem;
+  }
 }
 </style>

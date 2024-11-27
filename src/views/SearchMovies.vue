@@ -236,7 +236,7 @@ export default {
 
 <style scoped>
 .search-movies {
-  padding: 2rem;
+  padding: 2rem 1rem;
   background-color: #1c1c1c;
   color: #fff;
   min-height: 100vh;
@@ -244,6 +244,9 @@ export default {
   flex-direction: column;
   gap: 1rem;
   box-sizing: border-box;
+  width: 100%; /* 화면 너비를 100%로 */
+  max-width: 100vw; /* 컨텐츠가 화면 너비를 넘지 않도록 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
 }
 
 .search-bar {
@@ -252,7 +255,7 @@ export default {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-  flex-wrap: wrap; /* 작은 화면에서 검색 바가 줄바꿈되도록 설정 */
+  flex-wrap: nowrap; /* 작은 화면에서 검색 바가 줄바꿈되도록 설정 */
 
 }
 
@@ -393,14 +396,20 @@ export default {
 /* 미디어 쿼리 */
 @media (max-width: 768px) {
   .search-bar {
-    flex-direction: column; /* 검색 바를 세로로 배치 */
-    align-items: stretch;
+    flex-wrap: nowrap; /* Ensure it stays on one line */
+    max-width: 100%; /* Ensure it doesn't overflow */
   }
 
-  .search-bar input,
-  .search-bar button {
-    width: 100%; /* 검색 바 요소가 전체 너비 차지 */
+  .search-bar input {
+    flex: 1;
+    min-width: 0; /* Allows input to shrink */
   }
+
+  .search-bar button {
+    flex-shrink: 0; /* Prevents button from shrinking */
+    width: auto; /* Keeps button's original size */
+  }
+
 
   .recent-searches ul {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -408,6 +417,14 @@ export default {
 }
 
 @media (orientation: landscape) {
+  .search-movies {
+    padding: 1rem; /* 패딩 축소 */
+    max-width: 100%; /* 컨텐츠가 화면에 꽉 차도록 설정 */
+  }
+
+  .search-bar {
+    padding: 0 1rem; /* 검색 바 좌우 여백 최소화 */
+  }
   .recent-searches ul {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
