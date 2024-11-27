@@ -127,20 +127,29 @@ export default {
 <style scoped>
 .hero-slider {
   position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
   width: 100%;
-  height: 80vh;
+  height: 90vh;
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   transition: background-image 0.8s ease-in-out;
+  overflow: hidden; /* 불필요한 스크롤 방지 */
+  touch-action: manipulation; /* 스크롤, 줌 등 기본 터치 동작 제한 */
+
 }
 
 .banner-content {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
+  bottom: 10px;
+  left: 5px;
+  width: 90%; /* 전체 화면 폭을 고려한 너비 */
   color: white;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .title {
@@ -148,16 +157,20 @@ export default {
   font-weight: bold;
   margin-bottom: 15px;
   cursor: pointer;
+  line-height: 1.2;
 }
 
 .overview {
   font-size: 1rem;
   line-height: 1.5;
+  max-width: 600px; /* 텍스트의 가로 폭 제한 */
+  margin-right: auto; /* 텍스트가 오른쪽으로 치우치지 않게 */
   margin-bottom: 20px;
 }
 
 .button-group {
   display: flex;
+  flex-wrap: wrap; /* 버튼이 화면에 맞춰 줄바꿈 */
   gap: 10px;
 }
 
@@ -170,6 +183,8 @@ export default {
   font-weight: bold; /* 글씨 굵기 */
   transition: all 0.2s ease-in-out; /* 더 빠른 반응 시간 */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 버튼 그림자 */
+  position: relative;
+  overflow: hidden; /* 클릭 효과 제한 */
 }
 
 .title-btn:active {
@@ -280,4 +295,107 @@ export default {
   font-size: 1.5rem;
   cursor: pointer;
 }
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .hero-slider {
+    height: 100vh;
+  }
+
+  .banner-content {
+    bottom: 15px;
+    left: 15px;
+    gap: 0.8rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .overview {
+    font-size: 0.9rem;
+  }
+
+  .button-group {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-slider {
+    height: 70vh;
+  }
+
+  .banner-content {
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .overview {
+    font-size: 0.8rem;
+  }
+
+  .title-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-slider {
+    height: 50vh;
+  }
+
+  .banner-content {
+    bottom: 5px;
+    left: 5px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .overview {
+    font-size: 0.7rem;
+  }
+
+  .title-btn {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (orientation: landscape) {
+  .hero-slider {
+    height: 60vh;
+  }
+
+  .banner-content {
+    left: 10%;
+    bottom: 10%;
+  }
+
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .overview {
+    font-size: 1rem;
+  }
+}
+
 </style>

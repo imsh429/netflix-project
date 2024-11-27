@@ -111,6 +111,7 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
+  touch-action: manipulation; /* 터치 이벤트 지원 */
 }
 
 .movie-row {
@@ -138,7 +139,14 @@ export default {
   font-size: 24px;
   border-radius: 50%;
   z-index: 1;
+  transition: all 0.3s ease;
 }
+
+.scroll-button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1); /* 버튼 확대 효과 */
+}
+
 
 .scroll-button.left {
   left: 10px;
@@ -174,9 +182,10 @@ export default {
 }
 
 .movie-title {
+  font-weight: bold; /* 굵게 설정 */
   margin: 10px;
   color: #fff;
-  font-size: 16px;
+  font-size: clamp(0.9rem, 1.2vw, 1.5rem);
   text-align: center;
 }
 
@@ -205,5 +214,65 @@ export default {
   background: rgba(255, 215, 0, 1);
   color: white;
   transition: background-color 0.3s ease, color 0.3s ease; /* 호버 상태에서도 부드럽게 전환 */
+}
+
+/* 반응형 미디어 쿼리 */
+@media (max-width: 1024px) {
+  .movie-item {
+    width: 180px; /* 카드 크기 축소 */
+  }
+
+  .scroll-button {
+    padding: 8px;
+    font-size: 20px; /* 버튼 크기 축소 */
+  }
+
+  .movie-title {
+    font-size: 1rem; /* 폰트 크기 조정 */
+  }
+}
+
+@media (max-width: 768px) {
+  .movie-item {
+    width: 150px; /* 작은 화면에서 카드 크기 축소 */
+  }
+
+  .scroll-button {
+    padding: 6px;
+    font-size: 18px;
+  }
+
+  .movie-title {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-item {
+    width: 120px; /* 카드 크기 더 축소 */
+  }
+
+  .scroll-button {
+    padding: 5px;
+    font-size: 16px;
+  }
+
+  .movie-title {
+    font-size: 0.8rem;
+  }
+}
+
+@media (orientation: landscape) {
+  .movie-row {
+    gap: 12px; /* 가로 모드에서 간격 조정 */
+  }
+
+  .movie-item {
+    width: 180px; /* 가로 모드에서 카드 크기 조정 */
+  }
+
+  .movie-title {
+    font-size: 1rem;
+  }
 }
 </style>
