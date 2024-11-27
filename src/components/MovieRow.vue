@@ -39,13 +39,24 @@
     <button class="scroll-button right" @click="scrollRight">
       <i class="fas fa-chevron-right"></i>
     </button>
+
+    <!-- 상세정보 모달 -->
+    <ReusableModal :visible="showDetailModal" @close="closeDetailModal">
+      <MovieDetail v-if="selectedMovie" :id="selectedMovie.id" />
+    </ReusableModal>
   </div>
 </template>
 
 <script>
 import { addMovieToWishlist, removeMovieFromWishlist, isMovieInWishlist } from "@/utils/storage.js";
+import ReusableModal from "@/components/ReusableModal.vue";
+import MovieDetail from "@/views/MovieDetail.vue";
 
 export default {
+    components: {
+      ReusableModal,
+      MovieDetail,
+    },
   props: {
     movies: {
       type: Array,
@@ -54,7 +65,9 @@ export default {
   },
   data() {
     return {
-      hover: null
+      hover: null,
+      showDetailModal: false, // 상세정보 모달 표시 여부
+      selectedMovie: null, // 선택된 영화 데이터
     };
   },
   methods: {
@@ -65,8 +78,15 @@ export default {
       this.$refs.movieRow.scrollBy({ left: 300, behavior: "smooth" });
     },
     handleMovieClick(movieId) {
-      // 부모 컴포넌트로 movie-selected 이벤트를 전달
-      this.$emit("movie-selected", movieId);
+      const selected = this.movies.find((movie) => movie.id === movieId);
+      if (selected) {
+        this.selectedMovie = selected; // 선택된 영화 데이터 설정
+        this.showDetailModal = true;  // 모달 표시
+      }
+    },
+    closeDetailModal() {
+      this.showDetailModal = false; // 모달 닫기
+      this.selectedMovie = null;   // 선택된 영화 초기화
     },
     toggleWishlist(movie) {
       // 위시리스트 추가/삭제

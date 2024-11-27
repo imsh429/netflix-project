@@ -75,4 +75,32 @@ export default {
   opacity: 1;
   transform: scale(1);
 }
+
+/* 모바일 대응 스타일 */
+@media screen and (max-width: 768px) {
+  .modal-content {
+    width: 90%;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .close-btn {
+    top: 5px;
+    right: 5px;
+    font-size: 16px;
+  }
+}
+@media screen and (max-width: 480px) {
+  .modal-content {
+    width: 95%; /* 더 작은 화면에 맞게 크기 축소 */
+    padding: 8px; /* 여백 줄임 */
+    border-radius: 5px; /* 둥근 모서리 유지 */
+  }
+
+  .close-btn {
+    top: 5px;
+    right: 5px;
+    font-size: 14px; /* 버튼 글씨 크기 더 줄임 */
+  }
+}
 </style>
