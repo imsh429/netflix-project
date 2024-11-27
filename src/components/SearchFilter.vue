@@ -105,7 +105,7 @@ export default {
 }
 
 .filter-card label {
-  font-size: 1rem;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
   color: #fff;
   display: flex;
   align-items: center;
@@ -114,7 +114,7 @@ export default {
 
 .filter-select {
   padding: 0.75rem;
-  font-size: 1rem;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
   border: none;
   border-radius: 5px;
   background-color: #1c1c1c;
@@ -138,7 +138,7 @@ export default {
 
 .filter-btn {
   padding: 0.75rem 1.5rem;
-  font-size: 1rem;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
   border: none;
   border-radius: 5px;
   display: flex;

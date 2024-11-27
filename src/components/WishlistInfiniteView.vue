@@ -21,6 +21,14 @@
     <ReusableModal :visible="showMovieDetail" @close="closeMovieDetail">
       <MovieDetail :id="selectedMovieId" />
     </ReusableModal>
+
+    <button
+        v-if="showTopButton"
+        class="top-btn"
+        @click="scrollToTop"
+    >
+      <i class="fas fa-chevron-up"></i>
+    </button>
   </div>
 </template>
 
@@ -44,6 +52,7 @@ export default {
       moviesPerPage: 10,
       showMovieDetail: false,
       selectedMovieId: null,
+      showTopButton: false, // Top 버튼 표시 여부
     };
   },
   methods: {
@@ -86,6 +95,10 @@ export default {
       if (scrollPosition + bottomOffset >= documentHeight) {
         this.loadMoreMovies();
       }
+      this.showTopButton = window.scrollY > 300;
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" }); // 부드럽게 스크롤
     },
   },
   mounted() {
@@ -115,12 +128,17 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
+  padding: 1rem;
+  justify-items: center;
 }
 
 .movie-item {
   position: relative;
   text-align: center;
   overflow: hidden;
+  width: 100%;
+  max-width: 180px;
+  box-sizing: border-box;
 }
 
 .movie-item .poster-image {
@@ -134,6 +152,11 @@ export default {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
+.movie-item .poster-image:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
 .wishlist-btn {
   position: absolute;
   top: 10px;
@@ -142,8 +165,8 @@ export default {
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 1.2rem;
-  display: none; /* 기본적으로 숨김 */
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+  display: none;
   align-items: center;
   justify-content: center;
   width: 40px;
@@ -157,57 +180,86 @@ export default {
 }
 
 .movie-item:hover .wishlist-btn {
-  display: flex; /* 포스터 호버 시 나타남 */
+  display: flex;
+}
+
+.wishlist-btn:active {
+  transform: scale(0.9);
+}
+
+.movies-grid:empty:before {
+  content: "저장된 영화가 없습니다.";
+  display: block;
+  text-align: center;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+  color: #ccc;
+  margin: 2rem auto;
+}
+
+.loading-message,
+.end-message {
+  text-align: center;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+  margin-top: 1rem;
 }
 
 .loading-message {
-  text-align: center;
-  font-size: 1.2rem;
-  margin-top: 1rem;
   color: white;
 }
 
 .end-message {
-  text-align: center;
-  font-size: 1.2rem;
-  margin-top: 1rem;
   color: #aaa;
 }
 
-.modal-overlay {
+@media (max-width: 768px) {
+  .movies-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .movie-item .poster-image {
+    border-radius: 6px;
+  }
+
+  .wishlist-btn {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+.top-btn {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  animation: fadeInZoom 0.3s ease-out;
-}
-
-.modal-content {
-  position: relative;
-  width: 80%;
-  max-width: 800px;
-  background-color: black;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
-  overflow: hidden;
-  animation: fadeInZoom 0.3s ease-out;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ff0000;
   color: white;
-  font-size: 20px;
-  cursor: pointer;
   border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1rem;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0.8;
+}
+
+.top-btn:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.top-btn:active {
+  transform: scale(0.95);
+}
+
+@media (orientation: landscape) {
+  .movies-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }
 
 </style>
