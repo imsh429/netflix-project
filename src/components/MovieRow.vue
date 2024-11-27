@@ -39,35 +39,22 @@
     <button class="scroll-button right" @click="scrollRight">
       <i class="fas fa-chevron-right"></i>
     </button>
-
-    <!-- 상세정보 모달 -->
-    <ReusableModal :visible="showDetailModal" @close="closeDetailModal">
-      <MovieDetail v-if="selectedMovie" :id="selectedMovie.id" />
-    </ReusableModal>
   </div>
 </template>
 
 <script>
 import { addMovieToWishlist, removeMovieFromWishlist, isMovieInWishlist } from "@/utils/storage.js";
-import ReusableModal from "@/components/ReusableModal.vue";
-import MovieDetail from "@/views/MovieDetail.vue";
 
 export default {
-  components: {
-    ReusableModal,
-    MovieDetail,
-  },
   props: {
     movies: {
       type: Array,
-      default: () => [], // 기본값을 빈 배열로 설정
-    },
+      default: () => [] // 기본값을 빈 배열로 설정
+    }
   },
   data() {
     return {
-      hover: null,
-      showDetailModal: false, // 상세정보 모달 표시 여부
-      selectedMovie: null,    // 선택된 영화 데이터
+      hover: null
     };
   },
   methods: {
@@ -78,15 +65,8 @@ export default {
       this.$refs.movieRow.scrollBy({ left: 300, behavior: "smooth" });
     },
     handleMovieClick(movieId) {
-      const selected = this.movies.find((movie) => movie.id === movieId);
-      if (selected) {
-        this.selectedMovie = selected; // 선택된 영화 데이터 설정
-        this.showDetailModal = true;  // 모달 표시
-      }
-    },
-    closeDetailModal() {
-      this.showDetailModal = false; // 모달 닫기
-      this.selectedMovie = null;   // 선택된 영화 초기화
+      // 부모 컴포넌트로 movie-selected 이벤트를 전달
+      this.$emit("movie-selected", movieId);
     },
     toggleWishlist(movie) {
       // 위시리스트 추가/삭제
@@ -100,18 +80,16 @@ export default {
     isInWishlist(movieId) {
       // 위시리스트에 영화가 있는지 확인
       return isMovieInWishlist(movieId);
-    },
-  },
+    }
+  }
 };
 </script>
-
 
 <style scoped>
 .movie-row-container {
   position: relative;
   display: flex;
   align-items: center;
-  touch-action: manipulation; /* 터치 이벤트 지원 */
 }
 
 .movie-row {
@@ -139,14 +117,7 @@ export default {
   font-size: 24px;
   border-radius: 50%;
   z-index: 1;
-  transition: all 0.3s ease;
 }
-
-.scroll-button:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-  transform: scale(1.1); /* 버튼 확대 효과 */
-}
-
 
 .scroll-button.left {
   left: 10px;
@@ -182,10 +153,9 @@ export default {
 }
 
 .movie-title {
-  font-weight: bold; /* 굵게 설정 */
   margin: 10px;
   color: #fff;
-  font-size: clamp(0.9rem, 1.2vw, 1.5rem);
+  font-size: 16px;
   text-align: center;
 }
 
@@ -214,65 +184,5 @@ export default {
   background: rgba(255, 215, 0, 1);
   color: white;
   transition: background-color 0.3s ease, color 0.3s ease; /* 호버 상태에서도 부드럽게 전환 */
-}
-
-/* 반응형 미디어 쿼리 */
-@media (max-width: 1024px) {
-  .movie-item {
-    width: 180px; /* 카드 크기 축소 */
-  }
-
-  .scroll-button {
-    padding: 8px;
-    font-size: 20px; /* 버튼 크기 축소 */
-  }
-
-  .movie-title {
-    font-size: 1rem; /* 폰트 크기 조정 */
-  }
-}
-
-@media (max-width: 768px) {
-  .movie-item {
-    width: 150px; /* 작은 화면에서 카드 크기 축소 */
-  }
-
-  .scroll-button {
-    padding: 6px;
-    font-size: 18px;
-  }
-
-  .movie-title {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .movie-item {
-    width: 120px; /* 카드 크기 더 축소 */
-  }
-
-  .scroll-button {
-    padding: 5px;
-    font-size: 16px;
-  }
-
-  .movie-title {
-    font-size: 0.8rem;
-  }
-}
-
-@media (orientation: landscape) {
-  .movie-row {
-    gap: 12px; /* 가로 모드에서 간격 조정 */
-  }
-
-  .movie-item {
-    width: 180px; /* 가로 모드에서 카드 크기 조정 */
-  }
-
-  .movie-title {
-    font-size: 1rem;
-  }
 }
 </style>
