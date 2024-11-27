@@ -85,58 +85,46 @@ export default {
 </script>
 
 <style scoped>
+/* 헤더 공통 스타일 */
 header {
-  position: sticky; /* 스크롤 시 상단에 고정 */
-  top: 0; /* 화면의 최상단에 위치 */
-  z-index: 1000; /* 다른 요소들 위에 나타나도록 설정 */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex; /* Flexbox로 변경 */
+  justify-content: space-between; /* 좌우 정렬 */
+  align-items: center; /* 세로 정렬 중앙 */
+  padding: 1rem;
   background-color: rgba(0, 0, 0, 0.88);
-  transition: background-color 0.3s ease;
   color: white;
+  transition: background-color 0.3s ease;
 }
 
-/* 헤더 hover 상태에서 배경색 연해짐 */
-header:hover {
-  background-color: rgba(0, 0, 0, 0.79); /* 진한 배경색 */
-}
-
-/* 스크롤 시 배경색 변경 */
 header.scrolled {
   background-color: transparent;
-  transition: background-color 0.3s ease; /* 부드러운 전환 */
-}
-header.scrolled:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-  transition: background-color 0.3s ease; /* 부드러운 전환 */
 }
 
-/* 왼쪽 섹션 */
+header:hover {
+  background-color: rgba(0, 0, 0, 0.79);
+}
+
+header.scrolled:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 좌측 헤더 섹션 */
 .header-left {
   display: flex;
   align-items: center;
-  gap: 2rem; /* 로고와 네비게이션 간 간격 조정 */
+  gap: 2rem;
 }
 
-/* 로고 */
-.logo {
-  font-size: 1.5rem;
+/* 네비게이션 링크 */
+.nav-links {
+  flex-direction: row; /* 항상 가로 정렬 */
+  display: flex;
+  gap: 1.5rem;
 }
 
-.logo-link {
-  color: white;
-  font-size: 2rem; /* 로고 크기를 더 크게 설정 */
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.logo-link:hover {
-  color: #007bff; /* 로고 호버 시 파란색 */
-}
-
-/* 네비게이션 아이콘 */
 .icon-link {
   color: white;
   font-size: 1.3rem;
@@ -146,7 +134,7 @@ header.scrolled:hover {
 }
 
 .icon-link::after {
-  content: ""; /* 밑줄 추가 */
+  content: "";
   position: absolute;
   bottom: -4px;
   left: 50%;
@@ -158,17 +146,28 @@ header.scrolled:hover {
   transition: width 0.3s ease;
 }
 
-.icon-link:hover::after {
-  width: 100%; /* 호버 시 밑줄 확장 */
-}
-
 .icon-link:hover {
-  color: white; /* 링크 색상은 유지 */
+  color: white;
 }
 
-.nav-links {
-  display: flex;
-  gap: 1.5rem; /* 네비게이션 아이콘 간격 */
+.icon-link:hover::after {
+  width: 100%;
+}
+
+/* 로고 */
+.logo {
+  font-size: 1.5rem;
+}
+
+.logo-link {
+  color: white;
+  font-size: 2rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.logo-link:hover {
+  color: #007bff;
 }
 
 /* 사용자 정보 */
@@ -182,6 +181,7 @@ header.scrolled:hover {
   position: relative;
   display: inline-block;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .user-icon-wrapper i {
@@ -191,13 +191,13 @@ header.scrolled:hover {
 }
 
 .user-icon-wrapper:hover i {
-  font-size: 2rem; /* 아이콘 크기 증가 */
-  transform: scale(1.2); /* 추가 확대 효과 */
+  font-size: 2rem;
+  transform: scale(1.2);
 }
 
 .user-email {
   position: absolute;
-  top: 30px; /* 아이콘 위에 이메일 표시 */
+  top: 30px;
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.8);
@@ -216,30 +216,33 @@ header.scrolled:hover {
   visibility: visible;
 }
 
+/* 로그인/로그아웃 버튼 */
 .auth-button {
-  background: linear-gradient(135deg, #6a11cb, #2575fc); /* 기본 색상 그라데이션 */
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
   color: white;
-  font-size: 0.8rem; /* 글꼴 크기 축소 */
+  font-size: 0.8rem;
   font-weight: bold;
-  padding: 0.4rem 1rem; /* 패딩 줄이기 */
+  padding: 0.4rem 1rem;
   border: none;
-  border-radius: 20px; /* 작고 둥근 버튼 */
+  border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 크기 축소 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+  touch-action: manipulation; /* 터치 지원 */
 }
 
 .auth-button:hover {
-  background: linear-gradient(135deg, #2575fc, #6a11cb); /* 호버 시 색상 반전 */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15); /* 호버 시 약간의 그림자 증가 */
-  transform: scale(1.05); /* 버튼 확대 효과 */
+  background: linear-gradient(135deg, #2575fc, #6a11cb);
+  transform: scale(1.05);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
 }
 
 .auth-button:active {
-  transform: scale(0.95); /* 클릭 시 축소 효과 */
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2); /* 클릭 시 그림자 감소 */
+  background: linear-gradient(135deg, #ff5722, #ff9800); /* 터치 시 색상 변화 */
+  transform: scale(0.95);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .auth-button::before {
@@ -248,19 +251,71 @@ header.scrolled:hover {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.3); /* 클릭 시 원형 퍼짐 효과 */
+  width: 150;
+  height: 150;
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   transition: width 0.4s ease, height 0.4s ease, opacity 0.6s ease;
   opacity: 0;
 }
 
 .auth-button:active::before {
-  width: 150%; /* 퍼짐 크기 축소 */
-  height: 150%; /* 퍼짐 크기 축소 */
-  opacity: 1; /* 클릭 시 애니메이션 발생 */
+  width: 150%;
+  height: 150%;
+  opacity: 1;
 }
 
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  header {
+    flex-wrap: wrap; /* 가로로 공간이 부족하면 줄바꿈 허용 */
+    padding: 0.5rem;
+  }
 
+  .header-left,
+  .user-info {
+    flex: 1; /* 화면 크기에 따라 공간을 유연하게 차지 */
+    justify-content: center;
+    gap: 1rem; /* 간격 줄이기 */
+  }
+
+  .nav-links {
+    flex: 1;
+    justify-content: center; /* 네비게이션 링크 중앙 정렬 */
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+  }
+
+  .icon-link {
+    font-size: 1rem;
+  }
+
+  .auth-button {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.8rem;
+  }
+}
+
+@media (orientation: landscape) {
+  header {
+    padding: 0.5rem 2rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+}
+
+.logo-link img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
 </style>
