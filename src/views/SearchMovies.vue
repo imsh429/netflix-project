@@ -42,7 +42,7 @@
     </div>
 
     <TableView
-        v-else
+        v-else-if="movies.length > 0"
         :movies="movies"
         :currentPage="currentPage"
         :hasMorePages="hasMorePages"
@@ -243,6 +243,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  box-sizing: border-box;
 }
 
 .search-bar {
@@ -251,15 +252,17 @@ export default {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap; /* 작은 화면에서 검색 바가 줄바꿈되도록 설정 */
+
 }
 
 .search-bar input {
-  width: 400px;
+  flex: 1; /* 입력창이 넓이를 유연하게 차지 */
+  max-width: 400px;
   padding: 0.75rem;
   border: 2px solid transparent;
   border-radius: 5px;
-  font-size: 1rem;
-  outline: none;
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem); /* 반응형 폰트 크기 */  outline: none;
   transition: border-color 0.3s ease;
 }
 
@@ -275,13 +278,10 @@ export default {
   padding: 0.75rem;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: clamp(0.8rem, 1vw, 1rem); /* 반응형 폰트 크기 */
   transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
-.search-bar button i {
-  font-size: 1.2rem;
-}
 
 .search-bar button:hover {
   background-color: #0056b3;
@@ -298,11 +298,14 @@ export default {
 
 .recent-searches h4 {
   margin-bottom: 1rem;
-  font-size: 1.3rem;
-  color: #ffcc00;
+  font-size: clamp(1rem, 2vw, 1.3rem); /* 반응형 폰트 */
+  color: #a3a2a2;
 }
 
 .recent-searches ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 그리드로 검색어 배치 */
+  gap: 1rem;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -312,8 +315,9 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #444;
+  padding: 0.5rem 1rem;
+  background: #252525;
+  border-radius: 5px;
   transition: background-color 0.3s ease;
 }
 
@@ -323,13 +327,13 @@ export default {
 
 .recent-searches li:hover {
   background-color: #3d3d3d;
-  border-radius: 5px;
+  transform: scale(1.05);
 }
 
 .search-text {
   cursor: pointer;
   color: white;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1vw, 1rem);
   transition: color 0.3s ease;
 }
 
@@ -366,5 +370,48 @@ export default {
   color: #ff0000;
   text-decoration: underline;
 }
+.loading {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* 미디어 쿼리 */
+@media (max-width: 768px) {
+  .search-bar {
+    flex-direction: column; /* 검색 바를 세로로 배치 */
+    align-items: stretch;
+  }
+
+  .search-bar input,
+  .search-bar button {
+    width: 100%; /* 검색 바 요소가 전체 너비 차지 */
+  }
+
+  .recent-searches ul {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+}
+
+@media (orientation: landscape) {
+  .recent-searches ul {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
 </style>
+
 

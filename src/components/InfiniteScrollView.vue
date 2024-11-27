@@ -121,6 +121,7 @@ export default {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 반응형 카드 배치 */
   gap: 1.5rem;
   padding: 1rem;
+
 }
 
 .movie-item {
@@ -128,6 +129,7 @@ export default {
   text-align: center;
   overflow: hidden; /* 확대된 포스터가 넘치지 않도록 설정 */
   transition: transform 0.3s ease; /* 확대 시 부드럽게 */
+  border-radius: 10px; /* 카드 둥글게 */
 }
 
 .movie-item:hover {
@@ -175,9 +177,10 @@ export default {
 }
 
 .movie-title {
+  font-weight: bold;
   margin-top: 0.5rem;
   color: #fff;
-  font-size: 16px;
+  font-size: clamp(0.8rem, 1.2vw, 1.5rem); /* 반응형 폰트 크기 */
 }
 
 .loading {
@@ -189,7 +192,7 @@ export default {
 }
 
 .loading-text {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 1.2vw, 1.5rem); /* 반응형 폰트 크기 */
   color: #fff;
   margin-top: 0.5rem;
 }
@@ -236,5 +239,47 @@ export default {
 .top-button:hover {
   opacity: 1;
   transform: scale(1); /* 호버 시 확대 */
+}
+
+/* 미디어 쿼리 */
+@media (max-width: 768px) {
+  .infinite-scroll {
+    gap: 1rem; /* 모바일에서 그리드 간격 축소 */
+    padding: 0.5rem; /* 패딩 축소 */
+  }
+
+  .movie-item {
+    transform: scale(1); /* 기본 크기 유지 */
+  }
+
+  .movie-title {
+    font-size: clamp(0.7rem, 1vw, 1.2rem); /* 모바일에서 폰트 크기 줄임 */
+  }
+
+  .top-button {
+    bottom: 15px;
+    right: 15px;
+    font-size: 18px;
+    padding: 8px;
+  }
+}
+
+@media (orientation: landscape) {
+  .infinite-scroll {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 가로 모드에서 더 작은 카드 */
+  }
+
+  .movie-item {
+    transform: none; /* 가로 모드에서 카드 확대 효과 제거 */
+  }
+
+  .poster-image:hover {
+    transform: scale(1.05); /* 포스터 확대 유지 */
+  }
+
+  .top-button {
+    font-size: 18px;
+    padding: 8px;
+  }
 }
 </style>

@@ -91,13 +91,14 @@ export default {
 </script>
 
 <style scoped>
+
 .table-view {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 포스터 크기 조정 */
-  gap: 1.5rem; /* 카드 간격 */
-  padding: 1rem;
-  min-height: calc(100vh - 100px); /* 페이지네이션 버튼을 밀어내기 위한 최소 높이 */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 포스터 크기 조정 */
+  gap: 0.5rem; /* 카드 간격 */
+  padding: 0.5rem;
   box-sizing: border-box;
+  grid-auto-rows: 1fr; /* 카드의 높이를 균일하게 유지 */
   position: relative; /* 하단 버튼 위치를 기준으로 배치 */
 }
 
@@ -109,7 +110,7 @@ export default {
 }
 
 .movie-item:hover {
-  transform: scale(1); /* 마우스 올렸을 때 카드 확대 */
+  transform: scale(1.05); /* 마우스 올렸을 때 카드 확대 */
 }
 
 .poster-container {
@@ -118,6 +119,7 @@ export default {
 
 .poster-image {
   width: 100%; /* 포스터가 컨테이너 크기에 맞게 조정 */
+  height: auto; /* 반응형 크기 유지 */
   border-radius: 8px;
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* 부드러운 확대 효과 */
 }
@@ -155,25 +157,24 @@ export default {
 .movie-title {
   margin-top: 0.5rem;
   color: #fff;
-  font-size: 16px;
+  font-size: clamp(0.8rem, 1vw, 1.2rem); /* 반응형 폰트 크기 */
 }
 
 .pagination {
   position: absolute; /* 부모 컨테이너 안에서 절대 위치 */
-  bottom: -20px; /* 페이지 하단에 배치 */
+  bottom: 0px; /* 페이지 하단에 배치 */
   left: 50%; /* 중앙 정렬 */
   transform: translateX(-50%); /* 정확히 중앙에 위치하도록 조정 */
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   justify-content: center;
   align-items: center;
-  width: 100%; /* 버튼들을 중앙에 맞추기 위해 전체 너비 사용 */
-  padding: 1rem 0; /* 약간의 여백 추가 */
+
 }
 
 .pagination button {
   padding: 0.5rem 1rem;
-  font-size: 1rem;
+  font-size: clamp(0.8rem, 1vw, 1rem);
   font-family: 'Roboto', sans-serif; /* 현대적인 폰트 추가 */
   background-color: #333333; /* 어두운 배경 */
   color: #ffffff; /* 흰색 텍스트 */
@@ -195,4 +196,31 @@ export default {
   cursor: not-allowed;
 }
 
+/* 미디어 쿼리 */
+@media (max-width: 768px) {
+  .table-view {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* 모바일에서 카드 크기 축소 */
+    gap: 0.3rem; /* 카드 간격 축소 */
+  }
+
+  .movie-title {
+    font-size: clamp(0.7rem, 1vw, 1rem);
+  }
+
+  .pagination button {
+    font-size: clamp(0.7rem, 1vw, 0.9rem); /* 모바일에서 버튼 크기 축소 */
+    padding: 0.3rem 0.8rem;
+  }
+}
+
+@media (orientation: landscape) {
+  .table-view {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 가로 모드에서 카드 크기 조정 */
+  }
+
+  .pagination button {
+    font-size: clamp(0.8rem, 1vw, 1rem);
+    padding: 0.5rem 1rem;
+  }
+}
 </style>

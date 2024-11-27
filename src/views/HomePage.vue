@@ -113,6 +113,8 @@ export default {
 
 <style scoped>
 .home-page {
+  min-width: 100vh;
+  min-height: 100vh; /* 화면의 전체 높이를 채우도록 설정 */
   background: linear-gradient(180deg, #1c1c1c, #111); /* 어두운 그라데이션 배경 */
   color: #1c1c1c;
   padding: 15px; /* 전체 패딩 줄이기 */

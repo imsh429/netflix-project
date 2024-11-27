@@ -78,8 +78,15 @@ export default {
 </script>
 
 <style scoped>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
 .popular-movies {
   position: relative;
+  min-height: 100vh; /* 화면의 전체 높이를 채우도록 설정 */
   background-color: #1e1e1e; /* 배경색 추가 */
   color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 선택 사항: 약간의 그림자 효과 */
