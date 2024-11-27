@@ -119,6 +119,8 @@ export default {
   background: linear-gradient(180deg, #1c1c1c, #111); /* 어두운 그라데이션 배경 */
   color: #1c1c1c;
   padding: 15px; /* 전체 패딩 줄이기 */
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 h2 {
@@ -144,6 +146,10 @@ section {
 }
 
 @media screen and (max-width: 768px) {
+  .home-page {
+    padding: 10px; /* Reduce padding */
+    gap: 10px; /* Reduce gap */
+  }
   h2 {
     font-size: 1.4rem; /* 모바일에서 글씨 크기 줄임 */
     text-align: left;
@@ -153,9 +159,32 @@ section {
     margin-bottom: 15px; /* 모바일 섹션 간 간격 줄이기 */
   }
 }
+
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .home-page {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 10px;
+    padding: 8px;
+  }
+
+  section {
+    width: 100%; /* Full width of grid cell */
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+}
+
 @media (max-width: 480px) {
   .home-page {
-    gap: 10px; /* 모바일에서는 간격 축소 */
+    gap: 8px;
+    padding: 8px;
+  }
+
+  section {
+    padding: 6px;
   }
 }
 

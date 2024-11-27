@@ -236,7 +236,7 @@ export default {
 
 <style scoped>
 .search-movies {
-  padding: 2rem;
+  padding: 2rem 1rem;
   background-color: #1c1c1c;
   color: #fff;
   min-height: 100vh;
@@ -244,6 +244,9 @@ export default {
   flex-direction: column;
   gap: 1rem;
   box-sizing: border-box;
+  width: 100%; /* 화면 너비를 100%로 */
+  max-width: 100vw; /* 컨텐츠가 화면 너비를 넘지 않도록 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
 }
 
 .search-bar {
@@ -414,6 +417,14 @@ export default {
 }
 
 @media (orientation: landscape) {
+  .search-movies {
+    padding: 1rem; /* 패딩 축소 */
+    max-width: 100%; /* 컨텐츠가 화면에 꽉 차도록 설정 */
+  }
+
+  .search-bar {
+    padding: 0 1rem; /* 검색 바 좌우 여백 최소화 */
+  }
   .recent-searches ul {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
