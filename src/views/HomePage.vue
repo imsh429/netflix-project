@@ -113,8 +113,9 @@ export default {
 
 <style scoped>
 .home-page {
-  min-width: 100vh;
-  min-height: 100vh; /* 화면의 전체 높이를 채우도록 설정 */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* 각 섹션 간 기본 간격 */
   background: linear-gradient(180deg, #1c1c1c, #111); /* 어두운 그라데이션 배경 */
   color: #1c1c1c;
   padding: 15px; /* 전체 패딩 줄이기 */
@@ -150,6 +151,11 @@ section {
   section {
     padding: 8px; /* 모바일에서 섹션 패딩 축소 */
     margin-bottom: 15px; /* 모바일 섹션 간 간격 줄이기 */
+  }
+}
+@media (max-width: 480px) {
+  .home-page {
+    gap: 10px; /* 모바일에서는 간격 축소 */
   }
 }
 

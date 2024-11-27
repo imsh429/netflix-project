@@ -130,7 +130,7 @@ export default {
   display: grid;
   grid-template-rows: 1fr auto;
   width: 100%;
-  height: 90vh;
+  height: 100vh;
   background-size: cover;
   background-position: center center;
   transition: background-image 0.8s ease-in-out;
@@ -353,19 +353,24 @@ export default {
 @media (max-width: 480px) {
   .hero-slider {
     height: 50vh;
+    background-size: cover;
+    background-position: center center;
   }
 
   .banner-content {
     bottom: 5px;
     left: 5px;
+    padding: 5px;
+    gap: 0.5rem;
   }
 
   .title {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    line-height: 1.4;
   }
 
   .overview {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
 
   .title-btn {
@@ -381,12 +386,16 @@ export default {
 
 @media (orientation: landscape) {
   .hero-slider {
-    height: 60vh;
+    height: 70vh;
+  }
+
+  .movie-item {
+    width: 150px; /* 가로 화면에서 포스터 크기 확대 */
   }
 
   .banner-content {
-    left: 10%;
-    bottom: 10%;
+    left: 20px;
+    bottom: 10px;
   }
 
   .title {

@@ -185,4 +185,54 @@ export default {
   color: white;
   transition: background-color 0.3s ease, color 0.3s ease; /* 호버 상태에서도 부드럽게 전환 */
 }
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .movie-title {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-row {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* 모바일 환경에서 포스터 크기 축소 */
+  }
+
+  .movie-title {
+    font-size: 0.7rem;
+  }
+
+  .scroll-button {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+}
+
+/* 가로 화면 스타일 */
+@media (orientation: landscape) {
+  .movie-row-container {
+    padding: 0 20px; /* 가로 화면에서 좌우 여백 추가 */
+  }
+
+  .movie-row {
+    gap: 24px; /* 포스터 간 간격 확대 */
+  }
+
+  .movie-item {
+    width: 150px; /* 포스터 크기 확대 */
+  }
+
+  .movie-title {
+    font-size: 0.8rem; /* 가로 화면에서 글씨 크기 확대 */
+  }
+
+  .scroll-button {
+    top: 60%; /* 가로 화면에서 버튼 위치 조정 */
+    width: 36px; /* 버튼 크기 확대 */
+    height: 36px;
+    font-size: 20px; /* 버튼 아이콘 크기 확대 */
+  }
+}
+
 </style>

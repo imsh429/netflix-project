@@ -142,48 +142,36 @@ export default {
 <style scoped>
 /* Wrapper: Centering */
 .auth-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  place-items: center;
   height: 100vh;
   background: linear-gradient(135deg, #6a11cb, #2575fc);
   margin: 0;
   padding: 0;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* Container: Perspective for animation */
 .auth-container {
-  position: relative;
-  width: 400px;
-  height: 520px;
-  perspective: 1000px;
-}
-
-/* Card */
-.auth-card {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #ffffff, #f0f0f0);
+  width: 90%;
+  max-width: 400px;
+  height: auto;
+  background: #fff;
   border-radius: 15px;
-  padding: 2rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transform-style: preserve-3d;
 }
 
-/* Title */
-.auth-card h2 {
-  font-family: "Poppins", sans-serif;
-  font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 1.5rem;
-  text-shadow: 0px 3px 4px rgba(0, 0, 0, 0.1);
+/* Card */
+.auth-card {
+  width: 100%;
 }
+
 
 /* Input Fields */
 .auth-card input {
@@ -223,6 +211,11 @@ export default {
   background: linear-gradient(135deg, #2575fc, #6a11cb);
 }
 
+.submit-button:active {
+  transform: scale(0.98);
+  background: linear-gradient(135deg, #2575fc, #6a11cb);
+}
+
 /* Toggle Button */
 .toggle-button {
   margin-top: 1rem;
@@ -253,11 +246,16 @@ export default {
 .checkbox-container {
   display: flex;
   align-items: center;
+  gap: 0.5rem; /* 라벨과 체크박스 간 간격 */
+  font-size: 0.9rem;
   margin-bottom: 1rem;
 }
 
-.checkbox-container input {
-  margin-right: 0.5rem;
+.checkbox-container input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #6a11cb; /* 체크박스 색상 */
+  cursor: pointer;
 }
 
 /* Animation: Slide Transition */
@@ -275,4 +273,36 @@ export default {
   transform: translateX(-100%);
   opacity: 0;
 }
+
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 1rem;
+    box-shadow: none;
+  }
+
+  .submit-button {
+    font-size: 0.9rem;
+  }
+
+  .toggle-button {
+    font-size: 0.8rem;
+  }
+}
+@media (min-width: 1024px) {
+  .auth-container {
+    max-width: 500px;
+  }
+
+  .submit-button {
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+}
+
+@media (orientation: landscape) {
+  .auth-wrapper {
+    height: 100vh;
+  }
+}
+
 </style>

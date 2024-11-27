@@ -289,17 +289,23 @@ header.scrolled:hover {
 
 @media (max-width: 480px) {
   header {
-    font-size: 0.9rem;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* 헤더 줄바꿈 허용 */
+    padding: 0.5rem; /* 패딩 축소 */
+    height: 50px; /* 모바일에서 높이 축소 */
+  }
+
+  .nav-links {
+    gap: 1rem;
+    justify-content: space-around;
   }
 
   .icon-link {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .auth-button {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem; /* 버튼 크기 축소 */
   }
 }
 
