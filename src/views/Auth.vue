@@ -127,6 +127,7 @@ export default {
           };
           // 로컬스토리지에 사용자 정보 저장
           localStorage.setItem("userId", userInfo.nickname); // 사용자 ID 저장
+          localStorage.setItem("kakaoId", userInfo.id); // 사용자 이메일 저장
           alert(`환영합니다, ${userInfo.nickname}!`);
           this.$router.push('/'); // 로그인 후 메인 페이지로 리다이렉트
         },

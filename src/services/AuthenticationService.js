@@ -5,9 +5,9 @@ const login = async (email, password) => {
         tryLogin(
             email,
             password,
-            (tmdbKey) => {
+            () => {
                 // 로그인 성공 시 입력한 비밀번호를 TMDb-Key로 저장
-                localStorage.setItem("TMDb-Key", tmdbKey);
+                //localStorage.setItem("TMDb-Key", tmdbKey);
                 localStorage.setItem("userId", email);
                 resolve("로그인 성공");
             },
@@ -27,11 +27,11 @@ const register = async (email, password) => {
     });
 };
 
-const isLoggedIn = () => !!localStorage.getItem("TMDb-Key") || !!localStorage.getItem("kakaoAccessToken");
+const isLoggedIn = () => !!localStorage.getItem("userId") || !!localStorage.getItem("kakaoAccessToken");
 
 const logout = () => {
-    localStorage.removeItem("TMDb-Key");
     localStorage.removeItem("userId");
+    localStorage.removeItem("kakaoAccessToken");
 };
 
 export { login, register, isLoggedIn, logout };
