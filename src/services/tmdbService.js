@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://api.themoviedb.org/3';
+const API_BASE_URL = process.env.VUE_APP_API_BASE_URL;
 const language = 'ko-KR';
 
 // endpoint 이용해 요청할 API 주소 구성
