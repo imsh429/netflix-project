@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import HomePage from '@/views/HomePage.vue';
 import PopularMovies from '@/views/PopularMovies.vue';
 import SearchMovies from '@/views/SearchMovies.vue';
@@ -47,7 +47,7 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory('/netflix-project/'),
+    history: createWebHashHistory('/netflix-project/'),
     routes
 });
 
