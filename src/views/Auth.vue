@@ -48,6 +48,7 @@
               {{ isSignUp ? '회원가입' : '로그인' }}
             </button>
           </form>
+          <div v-on:click="kakaoLoginBtn">카카오로 로그인하기</div>
           <button
               type="button"
               class="toggle-button"
@@ -84,6 +85,62 @@ export default {
     };
   },
   methods: {
+    kakaoLoginBtn: function () {
+  // 카카오 SDK 초기화
+  if (!window.Kakao.isInitialized()) {
+    window.Kakao.init(process.env.VUE_APP_KAKAO_API_KEY);
+  }
+
+  // 기존 토큰 제거
+  if (window.Kakao.Auth.getAccessToken()) {
+    window.Kakao.API.request({
+      url: '/v1/user/unlink',
+      success: function (response) {
+        console.log(response);
+      },
+      fail: function (error) {
+        console.log(error);
+      },
+    });
+    window.Kakao.Auth.setAccessToken(undefined);
+  }
+
+  // 로그인 실행
+  window.Kakao.Auth.login({
+    success: (authObj) => {
+      console.log('Access Token:', authObj.access_token);
+      // 로컬스토리지에 Access Token 저장
+      localStorage.setItem('kakaoAccessToken', authObj.access_token);
+
+      // 사용자 정보 요청
+      window.Kakao.API.request({
+        url: '/v2/user/me',
+        data: {
+          property_keys: ['kakao_account.email', 'kakao_account.profile.nickname'],
+        },
+        success: (response) => {
+          console.log(response);
+          const userInfo = {
+            id: response.id,
+            email: response.kakao_account.email,
+            nickname: response.kakao_account.profile.nickname,
+          };
+          // 로컬스토리지에 사용자 정보 저장
+          localStorage.setItem("userId", userInfo.nickname); // 사용자 ID 저장
+          alert(`환영합니다, ${userInfo.nickname}!`);
+          this.$router.push('/'); // 로그인 후 메인 페이지로 리다이렉트
+        },
+        fail: (error) => {
+          console.error('사용자 정보 요청 실패:', error);
+          localStorage.removeItem('kakaoAccessToken'); // 실패 시 토큰 삭제
+        },
+      });
+    },
+    fail: (error) => {
+      console.error('카카오 로그인 실패:', error);
+    },
+  });
+},
     async handleSubmit() {
       if (this.isSignUp) {
         if (this.password !== this.confirmPassword) {

@@ -5,7 +5,7 @@ import SearchMovies from '@/views/SearchMovies.vue';
 import WishlistMovies from '@/views/WishlistMovies.vue';
 import MovieDetail from '@/views/MovieDetail.vue';
 import AuthPage from '@/views/Auth.vue';
-import { isLoggedIn } from "@/services/AuthenticationService.js";
+//import { isLoggedIn } from "@/services/AuthenticationService.js";
 
 const routes = [
     {
@@ -52,7 +52,7 @@ const router = createRouter({
 });
 
 // Middleware to check authentication before each route
-router.beforeEach((to, from, next) => {
+/*router.beforeEach((to, from, next) => {
     const publicPages = ['/signin', '/signup'];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = isLoggedIn();
@@ -61,6 +61,6 @@ router.beforeEach((to, from, next) => {
         return next('/signin');
     }
     next();
-});
+});*/
 
 export default router;

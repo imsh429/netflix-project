@@ -27,7 +27,7 @@ const register = async (email, password) => {
     });
 };
 
-const isLoggedIn = () => !!localStorage.getItem("TMDb-Key");
+const isLoggedIn = () => !!localStorage.getItem("TMDb-Key") || !!localStorage.getItem("kakaoAccessToken");
 
 const logout = () => {
     localStorage.removeItem("TMDb-Key");

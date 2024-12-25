@@ -12,8 +12,8 @@ const endpoints = {
     discover: '/discover/movie'        // 영화 검색/필터링
 };
 
-// Local Storage 에서 API 키를 가져오는 함수
-const getApiKey = () => localStorage.getItem("TMDb-Key");
+// .env 에서 API 키를 가져오는 함수
+const getApiKey = () => process.env.VUE_APP_TMDB_API_KEY;
 
 // 특정 카테고리의 영화 데이터 가져오는 '공통'함수
 const fetchMovies = async (category, page = 1, additionalParams = {}) => {
