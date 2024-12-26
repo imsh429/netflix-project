@@ -165,6 +165,7 @@ export default {
     },
   });
 },
+//로그인 후 새로고침 해야 header에 사용자 정보 뜸
 //로그아웃 기능은 AuthenticationService.js에 구현
     async handleSubmit() {
       if (this.isSignUp) {
