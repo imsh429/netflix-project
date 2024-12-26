@@ -32,6 +32,8 @@ const isLoggedIn = () => !!localStorage.getItem("userId") || !!localStorage.getI
 const logout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("kakaoAccessToken");
+    localStorage.removeItem("kakaoId");
+    
 };
 
 export { login, register, isLoggedIn, logout };

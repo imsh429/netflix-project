@@ -48,7 +48,12 @@
               {{ isSignUp ? '회원가입' : '로그인' }}
             </button>
           </form>
-          <div v-on:click="kakaoLoginBtn">카카오로 로그인하기</div>
+          <img
+            :src="kakaoLoginImage"
+            alt="카카오로 로그인"
+            class="kakao-login-button"
+            @click="kakaoLoginBtn"
+          />
           <button
               type="button"
               class="toggle-button"
@@ -82,6 +87,7 @@ export default {
       agreedTerms: false,
       rememberMe: localStorage.getItem("keepLogin") === "true", // keepLogin 상태 반영
       errorMessage: null,
+      kakaoLoginImage: require("@/assets/kakaologin_btn.png"),
     };
   },
   methods: {
@@ -96,10 +102,11 @@ export default {
     window.Kakao.API.request({
       url: '/v1/user/unlink',
       success: function (response) {
-        console.log(response);
+        console.log('토큰 초기화 성공:', response);
       },
       fail: function (error) {
-        console.log(error);
+        console.log('토큰 초기화 실패:', error);
+        this.errorMessage = "로그인 세션 초기화 중 문제가 발생했습니다. 다시 시도해주세요.";
       },
     });
     window.Kakao.Auth.setAccessToken(undefined);
@@ -119,7 +126,7 @@ export default {
           property_keys: ['kakao_account.email', 'kakao_account.profile.nickname'],
         },
         success: (response) => {
-          console.log(response);
+          console.log('사용자 정보:', response);
           const userInfo = {
             id: response.id,
             email: response.kakao_account.email,
@@ -134,15 +141,31 @@ export default {
         fail: (error) => {
           console.error('사용자 정보 요청 실패:', error);
           localStorage.removeItem('kakaoAccessToken'); // 실패 시 토큰 삭제
+          alert("사용자 정보를 가져오는 데 실패했습니다. 다시 시도해주세요.");
         },
       });
     },
     fail: (error) => {
       console.error('카카오 로그인 실패:', error);
-      this.errorMessage = "카카오 로그인에 실패했습니다. 다시 시도해주세요.";
+
+      if (error && error.response) {
+        const statusCode = error.response.status;
+        if (statusCode >= 500) {
+          this.errorMessage = "서버에서 문제가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        } else if (statusCode === 401) {
+          this.errorMessage = "인증에 실패했습니다. 다시 로그인해주세요.";
+        } else {
+          this.errorMessage = "요청 중 오류가 발생했습니다. 다시 시도해주세요.";
+        }
+      } else if (error.message && error.message.includes("Network")) {
+        this.errorMessage = "네트워크 연결을 확인하고 다시 시도해주세요.";
+      } else {
+        this.errorMessage = "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.";
+      }
     },
   });
 },
+//로그아웃 기능은 AuthenticationService.js에 구현
     async handleSubmit() {
       if (this.isSignUp) {
         if (this.password !== this.confirmPassword) {
@@ -331,6 +354,19 @@ export default {
 .slide-fade-leave-to {
   transform: translateX(-100%);
   opacity: 0;
+}
+
+.kakao-login-button {
+  display: block;
+  margin: 20px auto; /* 중앙 정렬 */
+  cursor: pointer;
+  width: 200px; /* 버튼 너비 */
+  height: auto; /* 자동 높이 */
+  transition: transform 0.3s ease;
+}
+
+.kakao-login-button:hover {
+  transform: scale(1.05); /* 마우스 오버 시 확대 */
 }
 
 @media (max-width: 768px) {
