@@ -70,11 +70,11 @@ cd netflix-project
 npm install
 ```
 ### 2. 개발 모드 실행
-npm run serve
+npm run serve 
 ```
 ```
-### 3. 프로덕션 빌드
-npm run build
+### 3. 배포 빌드 실행
+npm run build 
 ```
 ```
 ### 4. 코드 린트 및 자동 수정
