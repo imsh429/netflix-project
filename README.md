@@ -73,7 +73,7 @@ npm install
 npm run serve
 ```
 ```
-### 3. 프로덕션 빌드
+### 3. 배포 빌드 실행
 npm run build
 ```
 ```
